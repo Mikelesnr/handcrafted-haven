@@ -1,0 +1,12 @@
+{
+  "name": "handcrafted-heaven-backend",
+  "version": "1.0.0",
+  "description": "Backend for a crafts marketplace",
+  "license": "ISC",
+  "author": "Michael Mwanza, Moshoeshoe Simon Mopeli, Tinny Mosimanyana",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
