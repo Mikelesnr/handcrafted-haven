@@ -63,20 +63,20 @@ This group project supports core course goals:
 ## 🚀 Getting Started
 
 1. Clone the repo
-   ```bash
-   git clone https://github.com/YOUR_REPO_URL.git
+
+   ````bash
+   git clone https://github.com/Mikelesnr/handcrafted-haven.git
    Install dependencies
-   ```
+   ```bash
+    npm install
+    Set environment variables
 
-bash
-npm install
-Set environment variables
+    env
+    NEXT_PUBLIC_API_BASE=https://your-api-endpoint
+    Run locally
 
-env
-NEXT_PUBLIC_API_BASE=https://your-api-endpoint
-Run locally
-
-bash
-npm run dev
-📦 Deployment
-Hosted on Vercel, with automated builds from GitHub.
+    bash
+    npm run dev
+    📦 Deployment
+    Hosted on Vercel, with automated builds from GitHub.
+   ````
