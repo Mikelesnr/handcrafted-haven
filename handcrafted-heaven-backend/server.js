@@ -10,6 +10,7 @@ const routes = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:${PORT}`;
 
 // Middleware
 app.use(express.json());
@@ -29,6 +30,6 @@ app.use((req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-  console.log(`📘 API docs available at http://localhost:${PORT}/api-docs`);
+  console.log(`🚀 Server running at ${PUBLIC_URL}`);
+  console.log(`📘 API docs available at ${PUBLIC_URL}/api-docs`);
 });

@@ -8,7 +8,7 @@ exports.sendVerificationEmail = async (user) => {
     html: `
       <p>Hi ${user.name},</p>
       <p>Thank you for registering. Please click the link below to verify your email:</p>
-      <p><a href="${process.env.BACKEND_URL}/api/auth/verify/${user.verificationToken}">Verify Email</a></p>
+      <p><a href="${process.env.PUBLIC_URL}/api/auth/verify/${user.verificationToken}">Verify Email</a></p>
     `,
   };
 
