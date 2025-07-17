@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  SELLER
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id               Int        @id @default(autoincrement())
+  name             String
+  email            String     @unique
+  password         String
+  role             Role       @default(CUSTOMER)
+  isEmailVerified  Boolean    @default(false)
+  verificationToken String?   // Optional field for email token
+  seller           Seller?
+  reviews          Review[]
+  orders           Order[]
+  createdAt        DateTime   @default(now())
+}
+
+model Seller {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id])
+  bio       String?
+  imageUrl  String?
+  products  Product[]
+}
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String
+  price       Float
+  imageUrl    String
+  category    String
+  sellerId    Int
+  seller      Seller       @relation(fields: [sellerId], references: [id])
+  reviews     Review[]
+  orderItems  OrderItem[]
+  createdAt   DateTime     @default(now())
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String
+  productId Int
+  userId    Int
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id          Int          @id @default(autoincrement())
+  buyerId     Int
+  buyer       User         @relation(fields: [buyerId], references: [id])
+  status      OrderStatus  @default(PENDING)
+  totalAmount Float
+  createdAt   DateTime     @default(now())
+  items       OrderItem[]
+  payment     Payment?
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  orderId    Int
+  productId  Int
+  quantity   Int      @default(1)
+  price      Float
+
+  order      Order    @relation(fields: [orderId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  orderId       Int           @unique
+  method        String        // e.g., "card", "paypal", "mobileMoney"
+  status        PaymentStatus @default(PENDING)
+  transactionId String?
+  paidAt        DateTime?
+  order         Order         @relation(fields: [orderId], references: [id])
+}
