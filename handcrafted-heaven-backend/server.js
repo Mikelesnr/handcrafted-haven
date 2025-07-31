@@ -26,6 +26,12 @@ app.use(
   })
 );
 
+// ✅ Credentials header middleware (insert here)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 // Swagger Docs
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 

@@ -24,6 +24,13 @@ exports.requestPasswordReset = async (req, res) => {
     const token = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 1000 * 60 * 30); // 30 minutes from now
 
+    await prisma.token.deleteMany({
+      where: {
+        userId: user.id,
+        type: "EMAIL_RESET",
+      },
+    });
+
     await prisma.token.create({
       data: {
         token,

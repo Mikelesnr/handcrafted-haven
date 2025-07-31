@@ -5,13 +5,25 @@ const crypto = require("crypto");
 const { sendVerificationEmail } = require("../services/emailService");
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
+const COOKIE_NAME = "session_token";
+const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+const setTokenCookie = (res, token) => {
+  const isProd = process.env.NODE_ENV === "production";
+  res.cookie(COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "None" : "Lax",
+    maxAge: COOKIE_MAX_AGE,
+    path: "/",
+  });
+};
 
 exports.register = async (req, res) => {
   const { name, email, password, confirmPassword, role } = req.body;
 
-  if (password !== confirmPassword) {
+  if (password !== confirmPassword)
     return res.status(400).json({ error: "Passwords do not match" });
-  }
 
   try {
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -36,38 +48,25 @@ exports.register = async (req, res) => {
       expiresIn: "7d",
     });
 
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
-
     await prisma.token.create({
       data: {
         token,
         userId: user.id,
         type: "ACCESS",
-        expiresAt,
+        expiresAt: new Date(Date.now() + COOKIE_MAX_AGE),
       },
     });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setTokenCookie(res, token);
+
+    await sendVerificationEmail(user);
 
     const userWithImage = await prisma.user.findUnique({
       where: { id: user.id },
       include: {
-        Image: {
-          where: { type: "PROFILE_IMAGE" },
-          select: { url: true },
-        },
+        Image: { where: { type: "PROFILE_IMAGE" }, select: { url: true } },
       },
     });
-
-    const profileImage = userWithImage.Image[0]?.url || null;
-
-    await sendVerificationEmail(user);
 
     res.status(201).json({
       user: {
@@ -75,12 +74,12 @@ exports.register = async (req, res) => {
         email: user.email,
         role: user.role,
         emailVerified: user.isEmailVerified,
-        profileImage,
+        profileImage: userWithImage.Image[0]?.url || null,
       },
       message: "Verification email sent",
     });
   } catch (err) {
-    res.status(400).json({ error: "Registration failed", details: err });
+    res.status(500).json({ error: "Registration failed", details: err.message });
   }
 };
 
@@ -98,36 +97,21 @@ exports.login = async (req, res) => {
       expiresIn: "7d",
     });
 
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
-
     await prisma.token.create({
       data: {
         token,
         userId: user.id,
         type: "ACCESS",
-        expiresAt,
+        expiresAt: new Date(Date.now() + COOKIE_MAX_AGE),
       },
     });
 
-    const isProd = process.env.NODE_ENV === "production";
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setTokenCookie(res, token);
 
     const image = await prisma.image.findFirst({
-      where: {
-        userId: user.id,
-        type: "PROFILE_IMAGE",
-      },
+      where: { userId: user.id, type: "PROFILE_IMAGE" },
       select: { url: true },
     });
-
-    const profileImage = image?.url || null;
 
     res.json({
       user: {
@@ -135,11 +119,11 @@ exports.login = async (req, res) => {
         email: user.email,
         role: user.role,
         emailVerified: user.isEmailVerified,
-        profileImage,
+        profileImage: image?.url || null,
       },
     });
   } catch (err) {
-    res.status(500).json({ error: "Login error", details: err });
+    res.status(500).json({ error: "Login error", details: err.message });
   }
 };
 
@@ -147,40 +131,27 @@ exports.verifyEmail = async (req, res) => {
   const { token } = req.params;
 
   try {
-    const user = await prisma.user.findFirst({
-      where: { verificationToken: token },
-    });
-
-    if (!user) {
-      return res.status(404).json({ error: "Invalid or expired token" });
-    }
+    const user = await prisma.user.findFirst({ where: { verificationToken: token } });
+    if (!user) return res.status(404).json({ error: "Invalid or expired token" });
 
     await prisma.user.update({
       where: { id: user.id },
-      data: {
-        isEmailVerified: true,
-        verificationToken: null,
-      },
+      data: { isEmailVerified: true, verificationToken: null },
     });
 
-    const redirectUrl = `${
-      process.env.FRONTEND_URL
-    }/verified?name=${encodeURIComponent(user.name)}`;
+    const redirectUrl = `${process.env.FRONTEND_URL}/verified?name=${encodeURIComponent(user.name)}`;
     return res.redirect(302, redirectUrl);
   } catch (err) {
-    res.status(500).json({ error: "Verification failed", details: err });
+    res.status(500).json({ error: "Verification failed", details: err.message });
   }
 };
 
 exports.resendVerificationEmail = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({ where: { id: req.user.id } });
-
     if (!user) return res.status(404).json({ error: "User not found" });
-
-    if (user.isEmailVerified) {
+    if (user.isEmailVerified)
       return res.status(400).json({ error: "Email is already verified" });
-    }
 
     const newToken = crypto.randomBytes(32).toString("hex");
 
@@ -193,32 +164,26 @@ exports.resendVerificationEmail = async (req, res) => {
 
     res.json({ message: "Verification email resent" });
   } catch (err) {
-    res.status(500).json({ error: "Resend failed", details: err });
+    res.status(500).json({ error: "Resend failed", details: err.message });
   }
 };
 
 exports.logout = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    const token = req.cookies[COOKIE_NAME];
+    if (!token) return res.status(400).json({ error: "No active session found" });
 
-    if (!token) {
-      return res.status(400).json({ error: "No active session found" });
-    }
+    await prisma.token.deleteMany({ where: { token } });
 
-    // Remove token from database
-    await prisma.token.deleteMany({
-      where: { token },
-    });
-
-    // Clear the cookie
-    res.clearCookie("token", {
+    res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "Strict",
+      path: "/",
     });
 
     res.json({ message: "Logged out successfully" });
   } catch (err) {
-    res.status(500).json({ error: "Logout failed", details: err });
+    res.status(500).json({ error: "Logout failed", details: err.message });
   }
 };
