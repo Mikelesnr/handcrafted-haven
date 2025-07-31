@@ -1,0 +1,29 @@
+[
+  { "id": 1, "orderId": 1, "productId": 1, "quantity": 1, "price": 38.5 },
+  { "id": 2, "orderId": 1, "productId": 23, "quantity": 2, "price": 27.875 },
+
+  { "id": 3, "orderId": 2, "productId": 4, "quantity": 1, "price": 47.0 },
+  { "id": 4, "orderId": 2, "productId": 13, "quantity": 2, "price": 29.75 },
+
+  { "id": 5, "orderId": 3, "productId": 20, "quantity": 1, "price": 15.5 },
+  { "id": 6, "orderId": 3, "productId": 6, "quantity": 2, "price": 28.0 },
+
+  { "id": 7, "orderId": 4, "productId": 10, "quantity": 3, "price": 33.75 },
+  { "id": 8, "orderId": 4, "productId": 7, "quantity": 1, "price": 66.5 },
+
+  { "id": 9, "orderId": 5, "productId": 22, "quantity": 2, "price": 18.0 },
+  { "id": 10, "orderId": 5, "productId": 18, "quantity": 1, "price": 27.0 },
+
+  { "id": 11, "orderId": 6, "productId": 12, "quantity": 1, "price": 42.5 },
+  { "id": 12, "orderId": 6, "productId": 21, "quantity": 2, "price": 28.0 },
+
+  { "id": 13, "orderId": 7, "productId": 5, "quantity": 2, "price": 35.75 },
+  { "id": 14, "orderId": 7, "productId": 19, "quantity": 1, "price": 84.25 },
+
+  { "id": 15, "orderId": 8, "productId": 15, "quantity": 1, "price": 24.75 },
+  { "id": 16, "orderId": 8, "productId": 2, "quantity": 2, "price": 26.0 },
+  { "id": 17, "orderId": 8, "productId": 17, "quantity": 1, "price": 32.25 },
+
+  { "id": 18, "orderId": 9, "productId": 24, "quantity": 1, "price": 18.0 },
+  { "id": 19, "orderId": 9, "productId": 14, "quantity": 2, "price": 29.625 }
+]

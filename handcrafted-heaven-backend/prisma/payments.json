@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "orderId": 1,
+    "method": "CARD",
+    "status": "COMPLETED",
+    "transactionId": "TXN84392CARD",
+    "paidAt": "2025-07-28T09:16:02.000Z"
+  },
+  {
+    "id": 2,
+    "orderId": 2,
+    "method": "BANK_TRANSFER",
+    "status": "PENDING",
+    "transactionId": null,
+    "paidAt": null
+  },
+  {
+    "id": 3,
+    "orderId": 3,
+    "method": "MOBILE_MONEY",
+    "status": "COMPLETED",
+    "transactionId": "TXN20394MM",
+    "paidAt": "2025-07-30T11:47:33.000Z"
+  },
+  {
+    "id": 4,
+    "orderId": 4,
+    "method": "CARD",
+    "status": "COMPLETED",
+    "transactionId": "TXN45981CARD",
+    "paidAt": "2025-07-28T15:10:45.000Z"
+  },
+  {
+    "id": 5,
+    "orderId": 5,
+    "method": "BANK_TRANSFER",
+    "status": "FAILED",
+    "transactionId": null,
+    "paidAt": null
+  },
+  {
+    "id": 6,
+    "orderId": 6,
+    "method": "MOBILE_MONEY",
+    "status": "COMPLETED",
+    "transactionId": "TXN65501MM",
+    "paidAt": "2025-07-30T10:18:01.000Z"
+  },
+  {
+    "id": 7,
+    "orderId": 7,
+    "method": "CARD",
+    "status": "COMPLETED",
+    "transactionId": "TXN14038CARD",
+    "paidAt": "2025-07-28T08:50:10.000Z"
+  },
+  {
+    "id": 8,
+    "orderId": 8,
+    "method": "MOBILE_MONEY",
+    "status": "PENDING",
+    "transactionId": null,
+    "paidAt": null
+  },
+  {
+    "id": 9,
+    "orderId": 9,
+    "method": "BANK_TRANSFER",
+    "status": "COMPLETED",
+    "transactionId": "TXN87261BT",
+    "paidAt": "2025-07-30T12:32:12.000Z"
+  }
+]

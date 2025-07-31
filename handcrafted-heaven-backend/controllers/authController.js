@@ -36,6 +36,18 @@ exports.register = async (req, res) => {
       expiresIn: "7d",
     });
 
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await prisma.token.create({
+      data: {
+        token,
+        userId: user.id,
+        type: "ACCESS",
+        expiresAt,
+      },
+    });
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -45,7 +57,15 @@ exports.register = async (req, res) => {
 
     await sendVerificationEmail(user);
 
-    res.status(201).json({ user, message: "Verification email sent" });
+    res.status(201).json({
+      user: {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        emailVerified: user.isEmailVerified,
+      },
+      message: "Verification email sent",
+    });
   } catch (err) {
     res.status(400).json({ error: "Registration failed", details: err });
   }
@@ -65,14 +85,35 @@ exports.login = async (req, res) => {
       expiresIn: "7d",
     });
 
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await prisma.token.create({
+      data: {
+        token,
+        userId: user.id,
+        type: "ACCESS",
+        expiresAt,
+      },
+    });
+
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ user });
+    res.json({
+      user: {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        emailVerified: user.isEmailVerified,
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: "Login error", details: err });
   }
@@ -104,15 +145,14 @@ exports.verifyEmail = async (req, res) => {
 };
 
 exports.resendVerificationEmail = async (req, res) => {
-  const { email } = req.body;
-
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
 
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    if (user.isEmailVerified)
+    if (user.isEmailVerified) {
       return res.status(400).json({ error: "Email is already verified" });
+    }
 
     const newToken = crypto.randomBytes(32).toString("hex");
 
@@ -126,5 +166,31 @@ exports.resendVerificationEmail = async (req, res) => {
     res.json({ message: "Verification email resent" });
   } catch (err) {
     res.status(500).json({ error: "Resend failed", details: err });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(400).json({ error: "No active session found" });
+    }
+
+    // Remove token from database
+    await prisma.token.deleteMany({
+      where: { token },
+    });
+
+    // Clear the cookie
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.json({ message: "Logged out successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Logout failed", details: err });
   }
 };

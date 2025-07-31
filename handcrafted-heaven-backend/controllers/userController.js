@@ -1,11 +1,29 @@
 const prisma = require("../utilities/prismaClient");
+const { paginate } = require("../utilities/paginate");
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await prisma.user.findMany({
-      include: { reviews: true, orders: true, seller: true },
+    const { skip, limit, page } = paginate(req);
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        skip,
+        take: limit,
+        include: {
+          reviews: true,
+          orders: true,
+          seller: true,
+        },
+      }),
+      prisma.user.count(),
+    ]);
+
+    res.json({
+      data: users,
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
     });
-    res.json(users);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch users" });
   }

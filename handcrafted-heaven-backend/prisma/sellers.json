@@ -1,0 +1,42 @@
+[
+  {
+    "userId": 4,
+    "bio": "Crafts ceramics with a rustic charm.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  },
+  {
+    "userId": 5,
+    "bio": "Hand-carves wooden kitchenware from reclaimed timber.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  },
+  {
+    "userId": 6,
+    "bio": "Weaves textiles with bold, organic patterns.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  },
+  {
+    "userId": 7,
+    "bio": "Shapes elegant glass ornaments and suncatchers.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  },
+  {
+    "userId": 8,
+    "bio": "Metalcraft enthusiast forging functional art.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  },
+  {
+    "userId": 9,
+    "bio": "Paints ceramic pieces inspired by nature.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  },
+  {
+    "userId": 10,
+    "bio": "Knits warmth and comfort into every piece.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  },
+  {
+    "userId": 11,
+    "bio": "Specializes in upcycled wood and sustainable craft.",
+    "imageUrl": "https://hhaven-cdn.com/img/profiles/seller_profile.jpg"
+  }
+]

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
+const { protect } = require("../utilities/middleware");
 
 router.post(
   "/login",
@@ -87,17 +88,11 @@ router.get(
 
 router.post(
   "/resend-verification",
+  protect,
   /* #swagger.tags = ['Auth']
+     #swagger.security = [{ "BearerAuth": [] }]
      #swagger.summary = 'Resend verification email'
-     #swagger.description = 'Regenerates token and re-sends verification link to user email'
-     #swagger.parameters['body'] = {
-        in: 'body',
-        description: 'Email of user requesting verification again',
-        required: true,
-        schema: {
-          email: 'jane.doe@example.com'
-        }
-     }
+     #swagger.description = 'Regenerates verification token and sends a new email to the authenticated user'
      #swagger.responses[200] = {
         description: 'Verification email resent'
      }
@@ -112,6 +107,26 @@ router.post(
      }
   */
   authController.resendVerificationEmail
+);
+
+router.post(
+  "/logout",
+  protect,
+  /* #swagger.tags = ['Auth']
+     #swagger.security = [{ "BearerAuth": [] }]
+     #swagger.summary = 'Logout user'
+     #swagger.description = 'Removes session token from database and clears authentication cookie'
+     #swagger.responses[200] = {
+        description: 'Successfully logged out'
+     }
+     #swagger.responses[400] = {
+        description: 'No active session found'
+     }
+     #swagger.responses[500] = {
+        description: 'Server error during logout'
+     }
+  */
+  authController.logout
 );
 
 module.exports = router;
