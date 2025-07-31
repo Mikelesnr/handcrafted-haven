@@ -19,9 +19,22 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 
 // 🔐 CORS setup (place before routes and Swagger)
+const allowedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:3000",
+  "https://handcrafted-haven-flame.vercel.app",
+  "https://handcrafted-haven-git-main-mikelesnrs-projects.vercel.app",
+  "https://handcrafted-haven-go13ggnj4-mikelesnrs-projects.vercel.app",
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
