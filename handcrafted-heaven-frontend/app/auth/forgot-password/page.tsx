@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import api from "@/lib/api"; // Axios instance
-import axios, { AxiosError } from "axios"; // Namespace for type guards
+import api from "@/lib/api";
+import axios from "axios";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const router = useRouter();
 
   type PasswordResetErrorResponse = {
     error: string;
@@ -21,15 +19,10 @@ export default function ForgotPasswordPage() {
       await api.post("/auth/request-password-reset", { email });
       toast.success("✅ Reset link sent! Check your inbox.");
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response) {
-        const { status, data } = error.response as {
-          status: number;
-          data: PasswordResetErrorResponse;
-        };
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const data = error.response.data as PasswordResetErrorResponse;
 
-        console.log("Error response data:", data);
-
-        if (status === 404 && data.error) {
+        if (error.response.status === 404 && data.error) {
           toast.error(`${data.error} ${data.suggestion || ""}`);
         } else {
           toast.error("⚠️ Something went wrong with the request.");

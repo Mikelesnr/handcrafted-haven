@@ -13,7 +13,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "CUSTOMER",
+    role: "CUSTOMER" as "CUSTOMER" | "SELLER",
   });
 
   const handleChange = (
@@ -28,13 +28,19 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
       toast.success("✅ Account created! Check your email for verification.");
       onSuccess();
       router.push("/verify-email");
-    } catch (error) {
+    } catch {
       toast.error("⚠️ Registration failed. Please try again.");
     }
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleRegister();
+      }}
+      className="space-y-4"
+    >
       <input
         type="text"
         name="name"
@@ -42,6 +48,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
         className="w-full border p-2 rounded"
         value={formData.name}
         onChange={handleChange}
+        required
       />
       <input
         type="email"
@@ -50,6 +57,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
         className="w-full border p-2 rounded"
         value={formData.email}
         onChange={handleChange}
+        required
       />
       <input
         type="password"
@@ -58,6 +66,7 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
         className="w-full border p-2 rounded"
         value={formData.password}
         onChange={handleChange}
+        required
       />
       <input
         type="password"
@@ -66,19 +75,21 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
         className="w-full border p-2 rounded"
         value={formData.confirmPassword}
         onChange={handleChange}
+        required
       />
       <select
         name="role"
         className="w-full border p-2 rounded"
         value={formData.role}
         onChange={handleChange}
+        required
       >
         <option value="CUSTOMER">CUSTOMER</option>
         <option value="SELLER">SELLER</option>
       </select>
 
       <button
-        onClick={handleRegister}
+        type="submit"
         className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
       >
         Register

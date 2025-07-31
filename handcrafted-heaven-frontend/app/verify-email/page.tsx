@@ -12,7 +12,7 @@ export default function VerifyEmailPage() {
     try {
       await api.post("/auth/resend-verification");
       toast.success("Verification email resent successfully!");
-    } catch (err) {
+    } catch {
       toast.error("Failed to resend verification email.");
     } finally {
       setIsSending(false);

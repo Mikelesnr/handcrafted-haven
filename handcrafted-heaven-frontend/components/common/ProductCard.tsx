@@ -1,9 +1,9 @@
-// components/common/ProductCard.tsx
 "use client";
 
 import { useState } from "react";
 import ProductModal from "./ProductModal";
 import { Product } from "@/lib/types";
+import Image from "next/image";
 
 interface Props {
   product: Product;
@@ -22,11 +22,16 @@ export default function ProductCard({ product }: Props) {
   return (
     <>
       <div className="bg-neutral-50 dark:bg-neutral-800 shadow-md hover:shadow-lg transition-shadow rounded-xl overflow-hidden flex flex-col text-neutral-900 dark:text-neutral-100">
-        <img
-          src={product.imageUrl}
-          alt={product.title}
-          className="w-full h-48 object-cover"
-        />
+        <div className="relative w-full h-48">
+          <Image
+            src={product.imageUrl}
+            alt={product.title}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-t-xl"
+            priority
+          />
+        </div>
 
         <div className="p-4 flex flex-col justify-between flex-grow">
           <div className="space-y-2">
@@ -43,10 +48,12 @@ export default function ProductCard({ product }: Props) {
             </div>
 
             <div className="flex items-center gap-2 mt-2">
-              <img
+              <Image
                 src={product.seller.imageUrl}
                 alt="Seller Avatar"
-                className="w-6 h-6 rounded-full"
+                width={24}
+                height={24}
+                className="rounded-full"
               />
               <span className="text-neutral-500 dark:text-neutral-400 text-xs truncate">
                 {product.seller.bio}
