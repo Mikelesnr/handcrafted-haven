@@ -1,108 +1,78 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
-
 const prisma = new PrismaClient();
-const PASSWORD = "Test1234#";
+
+const users = require("./users.json");
+const sellers = require("./sellers.json");
+const products = require("./products.json");
+const reviews = require("./reviews.json");
+const orders = require("./orders.json");
+const orderItems = require("./orderItems.json");
+const payments = require("./payments.json");
 
 async function main() {
-  const hashedPassword = await bcrypt.hash(PASSWORD, 10);
+  const hashedPassword = await bcrypt.hash("Test1234#", 10);
 
-  // 🧑‍💼 Admin
-  const admin = await prisma.user.create({
-    data: {
-      name: "Admin User",
-      email: "admin@hhaven.com",
-      password: hashedPassword,
-      role: "ADMIN",
-      isEmailVerified: true,
-    },
-  });
+  // 🧑‍💼 Seeding User Table
+  console.log("🌱 Seeding user table...");
+  for (const user of users) {
+    await prisma.user.create({
+      data: {
+        ...user,
+        password: hashedPassword,
+      },
+    });
+  }
+  console.log("✅ User table seeded.");
 
-  // 🧑‍🎨 Seller
-  const sellerUser = await prisma.user.create({
-    data: {
-      name: "Artisan Amy",
-      email: "amy@hhaven.com",
-      password: hashedPassword,
-      role: "SELLER",
-      isEmailVerified: true,
-    },
-  });
+  // 🧑‍🎨 Seeding Seller Table
+  console.log("🌱 Seeding seller table...");
+  for (const seller of sellers) {
+    await prisma.seller.create({ data: seller });
+  }
+  console.log("✅ Seller table seeded.");
 
-  const sellerProfile = await prisma.seller.create({
-    data: {
-      userId: sellerUser.id,
-      bio: "Crafts ceramics with a rustic charm.",
-      imageUrl: "https://example.com/sellers/amy.png",
-    },
-  });
+  // 🛍️ Seeding Product Table
+  console.log("🌱 Seeding product table...");
+  for (const product of products) {
+    await prisma.product.create({ data: product });
+  }
+  console.log("✅ Product table seeded.");
 
-  const product = await prisma.product.create({
-    data: {
-      title: "Rustic Clay Bowl",
-      description: "Hand-molded from local clay using eco-friendly methods.",
-      price: 45.0,
-      imageUrl: "https://example.com/products/bowl.png",
-      category: "Ceramics",
-      sellerId: sellerProfile.id,
-    },
-  });
+  // ⭐ Seeding Review Table
+  console.log("🌱 Seeding review table...");
+  for (const review of reviews) {
+    await prisma.review.create({ data: review });
+  }
+  console.log("✅ Review table seeded.");
 
-  // 🛍️ Customer
-  const customer = await prisma.user.create({
-    data: {
-      name: "Buyer Ben",
-      email: "ben@hhaven.com",
-      password: hashedPassword,
-      role: "CUSTOMER",
-      isEmailVerified: true,
-    },
-  });
+  // 📦 Seeding Order Table
+  console.log("🌱 Seeding order table...");
+  for (const order of orders) {
+    await prisma.order.create({ data: order });
+  }
+  console.log("✅ Order table seeded.");
 
-  await prisma.review.create({
-    data: {
-      rating: 5,
-      comment: "Absolutely stunning piece, even better in person!",
-      productId: product.id,
-      userId: customer.id,
-    },
-  });
+  // 🧾 Seeding Order Items Table
+  console.log("🌱 Seeding order items table...");
+  for (const item of orderItems) {
+    await prisma.orderItem.create({ data: item });
+  }
+  console.log("✅ Order items table seeded.");
 
-  const order = await prisma.order.create({
-    data: {
-      buyerId: customer.id,
-      status: "CONFIRMED",
-      totalAmount: product.price,
-    },
-  });
+  // 💳 Seeding Payment Table
+  console.log("🌱 Seeding payment table...");
+  for (const payment of payments) {
+    await prisma.payment.create({ data: payment });
+  }
+  console.log("✅ Payment table seeded.");
 
-  await prisma.orderItem.create({
-    data: {
-      orderId: order.id,
-      productId: product.id,
-      quantity: 1,
-      price: product.price,
-    },
-  });
-
-  await prisma.payment.create({
-    data: {
-      orderId: order.id,
-      method: "card",
-      status: "COMPLETED",
-      transactionId: "TXN_TEST_001",
-      paidAt: new Date(),
-    },
-  });
-
-  console.log(
-    "✅ Seed complete — 3 users, 1 product, 1 order with review and payment"
-  );
+  console.log("🎉 All data seeded successfully.");
 }
 
 main()
-  .catch((e) => {
-    console.error("❌ Seeding failed:", e);
+  .catch((err) => {
+    console.error("❌ Seeding error:", err);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

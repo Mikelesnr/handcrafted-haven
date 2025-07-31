@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DB_URL")
+  provider  = "postgresql"
+  url       = env("DB_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -29,41 +29,66 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum ImageType {
+  PROFILE_IMAGE
+  PRODUCT_IMAGE
+}
+
+enum TokenType {
+  ACCESS
+  EMAIL_RESET
+  REFRESH
+}
+
 model User {
-  id               Int        @id @default(autoincrement())
-  name             String
-  email            String     @unique
-  password         String
-  role             Role       @default(CUSTOMER)
-  isEmailVerified  Boolean    @default(false)
-  verificationToken String?   // Optional field for email token
-  seller           Seller?
-  reviews          Review[]
-  orders           Order[]
-  createdAt        DateTime   @default(now())
+  id                Int      @id @default(autoincrement())
+  name              String
+  email             String   @unique
+  password          String
+  role              Role     @default(CUSTOMER)
+  isEmailVerified   Boolean  @default(false)
+  verificationToken String? // Optional field for email token
+  seller            Seller?
+  reviews           Review[]
+  orders            Order[]
+  tokens            Token[]
+  createdAt         DateTime @default(now())
+  Image             Image[]
+}
+
+model Token {
+  id        Int       @id @default(autoincrement())
+  token     String
+  type      TokenType
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Seller {
-  id        Int        @id @default(autoincrement())
-  userId    Int        @unique
-  user      User       @relation(fields: [userId], references: [id])
-  bio       String?
-  imageUrl  String?
-  products  Product[]
+  id       Int       @id @default(autoincrement())
+  userId   Int       @unique
+  user     User      @relation(fields: [userId], references: [id])
+  bio      String?
+  imageUrl String?
+  products Product[]
 }
 
 model Product {
-  id          Int          @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String
   description String
   price       Float
   imageUrl    String
   category    String
   sellerId    Int
-  seller      Seller       @relation(fields: [sellerId], references: [id])
+  seller      Seller      @relation(fields: [sellerId], references: [id])
   reviews     Review[]
   orderItems  OrderItem[]
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime    @default(now())
+  Image       Image[]
 }
 
 model Review {
@@ -78,33 +103,47 @@ model Review {
 }
 
 model Order {
-  id          Int          @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   buyerId     Int
-  buyer       User         @relation(fields: [buyerId], references: [id])
-  status      OrderStatus  @default(PENDING)
+  buyer       User        @relation(fields: [buyerId], references: [id])
+  status      OrderStatus @default(PENDING)
   totalAmount Float
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime    @default(now())
   items       OrderItem[]
   payment     Payment?
 }
 
 model OrderItem {
-  id         Int      @id @default(autoincrement())
-  orderId    Int
-  productId  Int
-  quantity   Int      @default(1)
-  price      Float
+  id        Int   @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int   @default(1)
+  price     Float
 
-  order      Order    @relation(fields: [orderId], references: [id])
-  product    Product  @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
 }
 
 model Payment {
   id            Int           @id @default(autoincrement())
   orderId       Int           @unique
-  method        String        // e.g., "card", "paypal", "mobileMoney"
+  method        String // e.g., "card", "paypal", "mobileMoney"
   status        PaymentStatus @default(PENDING)
   transactionId String?
   paidAt        DateTime?
   order         Order         @relation(fields: [orderId], references: [id])
+}
+
+model Image {
+  id        Int       @id @default(autoincrement())
+  url       String
+  type      ImageType
+  productId Int?
+  product   Product?  @relation(fields: [productId], references: [id])
+  userId    Int?
+  user      User?     @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+
+  @@index([productId])
+  @@index([userId])
 }

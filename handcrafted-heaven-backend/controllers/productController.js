@@ -1,4 +1,5 @@
 const prisma = require("../utilities/prismaClient");
+const { paginate } = require("../utilities/paginate");
 
 exports.createProduct = async (req, res) => {
   const { title, description, price, imageUrl, category, sellerId } = req.body;
@@ -14,10 +15,23 @@ exports.createProduct = async (req, res) => {
 
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await prisma.product.findMany({
-      include: { seller: true, reviews: true },
+    const { skip, limit, page } = paginate(req);
+
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        skip,
+        take: limit,
+        include: { seller: true, reviews: true },
+      }),
+      prisma.product.count(),
+    ]);
+
+    res.json({
+      data: products,
+      page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
     });
-    res.json(products);
   } catch (err) {
     res.status(500).json({ error: "Error fetching products" });
   }
