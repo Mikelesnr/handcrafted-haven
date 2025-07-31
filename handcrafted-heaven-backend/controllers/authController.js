@@ -55,6 +55,18 @@ exports.register = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    const userWithImage = await prisma.user.findUnique({
+      where: { id: user.id },
+      include: {
+        Image: {
+          where: { type: "PROFILE_IMAGE" },
+          select: { url: true },
+        },
+      },
+    });
+
+    const profileImage = userWithImage.Image[0]?.url || null;
+
     await sendVerificationEmail(user);
 
     res.status(201).json({
@@ -63,6 +75,7 @@ exports.register = async (req, res) => {
         email: user.email,
         role: user.role,
         emailVerified: user.isEmailVerified,
+        profileImage,
       },
       message: "Verification email sent",
     });
@@ -106,12 +119,23 @@ exports.login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    const image = await prisma.image.findFirst({
+      where: {
+        userId: user.id,
+        type: "PROFILE_IMAGE",
+      },
+      select: { url: true },
+    });
+
+    const profileImage = image?.url || null;
+
     res.json({
       user: {
         name: user.name,
         email: user.email,
         role: user.role,
         emailVerified: user.isEmailVerified,
+        profileImage,
       },
     });
   } catch (err) {
@@ -127,8 +151,9 @@ exports.verifyEmail = async (req, res) => {
       where: { verificationToken: token },
     });
 
-    if (!user)
+    if (!user) {
       return res.status(404).json({ error: "Invalid or expired token" });
+    }
 
     await prisma.user.update({
       where: { id: user.id },
@@ -138,7 +163,10 @@ exports.verifyEmail = async (req, res) => {
       },
     });
 
-    res.json({ message: "Email verified successfully" });
+    const redirectUrl = `${
+      process.env.FRONTEND_URL
+    }/verified?name=${encodeURIComponent(user.name)}`;
+    return res.redirect(302, redirectUrl);
   } catch (err) {
     res.status(500).json({ error: "Verification failed", details: err });
   }
