@@ -1,8 +1,8 @@
-//components/common/ProductModal.tsx
 "use client";
 
 import { Product } from "@/lib/types";
 import { Dialog } from "@headlessui/react";
+import Image from "next/image";
 
 interface Props {
   product: Product;
@@ -27,11 +27,16 @@ export default function ProductModal({ isOpen, onClose, product }: Props) {
       className="fixed inset-0 z-50 flex items-center justify-center"
     >
       <Dialog.Panel className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl max-w-2xl w-full overflow-y-auto max-h-[90vh] p-6">
-        <img
-          src={product.imageUrl}
-          alt={product.title}
-          className="w-full h-64 object-cover rounded-lg mb-4"
-        />
+        <div className="w-full h-64 relative mb-4">
+          <Image
+            src={product.imageUrl}
+            alt={product.title}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-lg"
+            priority
+          />
+        </div>
 
         <h2 className="text-2xl font-bold">{product.title}</h2>
         <p className="text-sm text-neutral-600 dark:text-neutral-300 mt-2">
@@ -49,10 +54,12 @@ export default function ProductModal({ isOpen, onClose, product }: Props) {
         </div>
 
         <div className="mt-4 flex items-center gap-2">
-          <img
+          <Image
             src={product.seller.imageUrl}
             alt="Seller"
-            className="w-8 h-8 rounded-full"
+            width={32}
+            height={32}
+            className="rounded-full"
           />
           <p className="text-sm text-neutral-700 dark:text-neutral-300">
             {product.seller.bio}

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import ProductCard from "@/components/common/ProductCard";
 import Pagination from "@/components/common/Paginate";
-import { Product, PaginationProps } from "@/lib/types";
+import { Product } from "@/lib/types";
 
 export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([]);
