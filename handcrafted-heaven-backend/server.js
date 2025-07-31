@@ -21,7 +21,7 @@ app.use(cookieParser());
 // 🔐 CORS setup (place before routes and Swagger)
 app.use(
   cors({
-    origin: "http://localhost:3000", // or wherever Swagger is being served from
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   })
 );

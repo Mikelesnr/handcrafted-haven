@@ -1,3 +1,4 @@
+//components/common/ProductModal.tsx
 "use client";
 
 import { Product } from "@/lib/types";

@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import TopNav from "@/components/common/TopNav";
 import Footer from "@/components/common/Footer";
+import { ModalProvider } from "@/context/ModalContext";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +31,36 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TopNav />
-        <div className="min-h-screen bg-gradient-to-b from-red-500 to-white">
-          {children}
-        </div>
-        <Footer />
+        <ModalProvider>
+          <TopNav />
+          <div className="min-h-screen bg-gradient-to-b from-red-500 to-white">
+            {children}
+          </div>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              success: {
+                style: {
+                  background: "#22c55e", // Tailwind green-500
+                  color: "white",
+                },
+              },
+              error: {
+                style: {
+                  background: "#ef4444", // Tailwind red-500
+                  color: "white",
+                },
+              },
+              loading: {
+                style: {
+                  background: "#f97316", // Tailwind orange-500 (for warning/processing)
+                  color: "white",
+                },
+              },
+            }}
+          />
+          <Footer />
+        </ModalProvider>
       </body>
     </html>
   );
