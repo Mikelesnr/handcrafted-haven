@@ -21,13 +21,15 @@ app.use(cookieParser());
 // 🔐 CORS setup (place before routes and Swagger)
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
 
 // ✅ Credentials header middleware (insert here)
 app.use((req, res, next) => {
+  const allowedOrigin = process.env.FRONTEND_URL;
+  res.header("Access-Control-Allow-Origin", allowedOrigin);
   res.header("Access-Control-Allow-Credentials", "true");
   next();
 });
