@@ -26,14 +26,6 @@ app.use(
   })
 );
 
-// ✅ Credentials header middleware (insert here)
-app.use((req, res, next) => {
-  const allowedOrigin = process.env.FRONTEND_URL;
-  res.header("Access-Control-Allow-Origin", allowedOrigin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
-
 // Swagger Docs
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 
