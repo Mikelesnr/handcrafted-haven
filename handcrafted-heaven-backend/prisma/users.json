@@ -1,0 +1,146 @@
+[
+  {
+    "name": "Admin User",
+    "email": "admin@hhaven.com",
+    "role": "ADMIN",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Second Admin",
+    "email": "admin2@hhaven.com",
+    "role": "ADMIN",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Third Admin",
+    "email": "admin3@hhaven.com",
+    "role": "ADMIN",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Artisan Amy",
+    "email": "amy@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Seller One",
+    "email": "seller1@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Seller Two",
+    "email": "seller2@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Seller Three",
+    "email": "seller3@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Seller Four",
+    "email": "seller4@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Seller Five",
+    "email": "seller5@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Seller Six",
+    "email": "seller6@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Seller Seven",
+    "email": "seller7@hhaven.com",
+    "role": "SELLER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Buyer Ben",
+    "email": "ben@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer One",
+    "email": "customer1@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Two",
+    "email": "customer2@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Three",
+    "email": "customer3@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Four",
+    "email": "customer4@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Five",
+    "email": "customer5@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Six",
+    "email": "customer6@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Seven",
+    "email": "customer7@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Eight",
+    "email": "customer8@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Nine",
+    "email": "customer9@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Ten",
+    "email": "customer10@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Eleven",
+    "email": "customer11@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  },
+  {
+    "name": "Customer Twelve",
+    "email": "customer12@hhaven.com",
+    "role": "CUSTOMER",
+    "isEmailVerified": true
+  }
+]

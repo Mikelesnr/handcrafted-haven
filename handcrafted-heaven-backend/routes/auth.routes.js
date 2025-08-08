@@ -1,6 +1,89 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
+const { protect } = require("../utilities/middleware");
+const passwordResetController = require("../controllers/passwordResetController");
+
+router.post(
+  "/request-password-reset",
+  /* #swagger.tags = ['Auth']
+     #swagger.summary = 'Request password reset'
+     #swagger.description = 'Generates a reset token and sends an email to the user'
+     #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+          email: 'jane.doe@example.com'
+        }
+     }
+     #swagger.responses[200] = {
+        description: 'Reset email sent'
+     }
+     #swagger.responses[404] = {
+        description: 'Email not found'
+     }
+     #swagger.responses[500] = {
+        description: 'Server error during request'
+     }
+  */
+  passwordResetController.requestPasswordReset
+);
+
+router.get(
+  "/verify-reset-token",
+  /* #swagger.tags = ['Auth']
+     #swagger.summary = 'Verify password reset token'
+     #swagger.description = 'Validates token before allowing user to proceed to password reset'
+     #swagger.parameters['token'] = {
+        in: 'query',
+        required: true,
+        type: 'string',
+        description: 'Password reset token'
+     }
+     #swagger.responses[200] = {
+        description: 'Token verified'
+     }
+     #swagger.responses[400] = {
+        description: 'Invalid or expired token'
+     }
+     #swagger.responses[500] = {
+        description: 'Server error during verification'
+     }
+  */
+  passwordResetController.verifyResetToken
+);
+
+router.post(
+  "/reset-password/:token",
+  /* #swagger.tags = ['Auth']
+     #swagger.summary = 'Reset password using token'
+     #swagger.description = 'Updates password using a valid token'
+     #swagger.parameters['token'] = {
+        in: 'path',
+        required: true,
+        type: 'string',
+        description: 'Password reset token'
+     }
+     #swagger.parameters['body'] = {
+        in: 'body',
+        required: true,
+        schema: {
+          password: 'NewSecurePass1!',
+          confirmPassword: 'NewSecurePass1!'
+        }
+     }
+     #swagger.responses[200] = {
+        description: 'Password updated successfully'
+     }
+     #swagger.responses[400] = {
+        description: 'Passwords do not match or token is invalid'
+     }
+     #swagger.responses[500] = {
+        description: 'Server error during password reset'
+     }
+  */
+  passwordResetController.resetPassword
+);
 
 router.post(
   "/login",
@@ -87,17 +170,11 @@ router.get(
 
 router.post(
   "/resend-verification",
+  protect,
   /* #swagger.tags = ['Auth']
+     #swagger.security = [{ "BearerAuth": [] }]
      #swagger.summary = 'Resend verification email'
-     #swagger.description = 'Regenerates token and re-sends verification link to user email'
-     #swagger.parameters['body'] = {
-        in: 'body',
-        description: 'Email of user requesting verification again',
-        required: true,
-        schema: {
-          email: 'jane.doe@example.com'
-        }
-     }
+     #swagger.description = 'Regenerates verification token and sends a new email to the authenticated user'
      #swagger.responses[200] = {
         description: 'Verification email resent'
      }
@@ -112,6 +189,26 @@ router.post(
      }
   */
   authController.resendVerificationEmail
+);
+
+router.post(
+  "/logout",
+  protect,
+  /* #swagger.tags = ['Auth']
+     #swagger.security = [{ "BearerAuth": [] }]
+     #swagger.summary = 'Logout user'
+     #swagger.description = 'Removes session token from database and clears authentication cookie'
+     #swagger.responses[200] = {
+        description: 'Successfully logged out'
+     }
+     #swagger.responses[400] = {
+        description: 'No active session found'
+     }
+     #swagger.responses[500] = {
+        description: 'Server error during logout'
+     }
+  */
+  authController.logout
 );
 
 module.exports = router;
