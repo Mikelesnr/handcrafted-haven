@@ -80,7 +80,9 @@ exports.register = async (req, res) => {
       message: "Verification email sent",
     });
   } catch (err) {
-    res.status(400).json({ error: "Registration failed", details: err });
+    res
+      .status(400)
+      .json({ error: "Registration failed", details: err.message });
   }
 };
 
@@ -139,7 +141,17 @@ exports.login = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: "Login error", details: err });
+    res.status(500).json({
+      error: "Login error",
+      details: isProduction
+        ? err.message // Only show message in production
+        : {
+            message: err.message,
+            stack: err.stack,
+            name: err.name,
+            code: err.code || null,
+          },
+    });
   }
 };
 
