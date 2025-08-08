@@ -351,6 +351,3 @@ export default function SellerDashboard() {
     </div>
   );
 }
-
-// Export this as default for easier import
-export { SellerDashboard };
