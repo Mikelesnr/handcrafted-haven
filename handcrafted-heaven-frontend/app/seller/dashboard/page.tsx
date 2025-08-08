@@ -1,11 +1,11 @@
 // app/seller/dashboard/page.tsx
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Search } from 'lucide-react';
-import api from '@/lib/api';
-import { toast } from 'react-hot-toast';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { Plus, Edit, Trash2, Search } from "lucide-react";
+import api from "@/lib/api";
+import { toast } from "react-hot-toast";
+import Image from "next/image";
 
 interface Product {
   id: number;
@@ -20,18 +20,24 @@ interface Product {
 export default function SellerDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: '',
-    category: '',
-    imageUrl: ''
+    title: "",
+    description: "",
+    price: "",
+    category: "",
+    imageUrl: "",
   });
 
-  const categories = ['Ceramics', 'Woodwork', 'Textiles', 'Glasswork', 'Metalcraft'];
+  const categories = [
+    "Ceramics",
+    "Woodwork",
+    "Textiles",
+    "Glasswork",
+    "Metalcraft",
+  ];
 
   useEffect(() => {
     fetchProducts();
@@ -39,12 +45,13 @@ export default function SellerDashboard() {
 
   const fetchProducts = async () => {
     try {
-      const response = await api.get('/products');
+      const response = await api.get("/sellers/3");
       // For demo - filter by sellerId = 1 (in real app, get from auth)
-      const sellerProducts = response.data.data?.filter((p: Product) => p.sellerId === 1) || [];
+      const sellerProducts = response.data.products;
+      console.log("Fetched products:", sellerProducts);
       setProducts(sellerProducts);
     } catch (error) {
-      console.error('Failed to fetch products:', error);
+      console.error("Failed to fetch products:", error);
     } finally {
       setLoading(false);
     }
@@ -52,11 +59,11 @@ export default function SellerDashboard() {
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      description: '',
-      price: '',
-      category: '',
-      imageUrl: ''
+      title: "",
+      description: "",
+      price: "",
+      category: "",
+      imageUrl: "",
     });
     setEditingProduct(null);
   };
@@ -66,24 +73,24 @@ export default function SellerDashboard() {
       const productData = {
         ...formData,
         price: parseFloat(formData.price),
-        sellerId: 1 // In real app, get from auth context
+        sellerId: 3, // In real app, get from auth context
       };
 
       if (editingProduct) {
         // Update product
         await api.put(`/products/${editingProduct.id}`, productData);
-        toast.success('Product updated successfully!');
+        toast.success("Product updated successfully!");
       } else {
         // Add new product
-        await api.post('/products', productData);
-        toast.success('Product added successfully!');
+        await api.post("/products", productData);
+        toast.success("Product added successfully!");
       }
 
       fetchProducts();
       setShowAddForm(false);
       resetForm();
     } catch (error) {
-      toast.error('Failed to save product');
+      toast.error("Failed to save product");
       console.error(error);
     }
   };
@@ -95,25 +102,25 @@ export default function SellerDashboard() {
       description: product.description,
       price: product.price.toString(),
       category: product.category,
-      imageUrl: product.imageUrl
+      imageUrl: product.imageUrl,
     });
     setShowAddForm(true);
   };
 
   const handleDelete = async (productId: number) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
       await api.delete(`/products/${productId}`);
-      toast.success('Product deleted successfully!');
+      toast.success("Product deleted successfully!");
       fetchProducts();
     } catch (error) {
-      toast.error('Failed to delete product');
+      toast.error("Failed to delete product");
       console.error(error);
     }
   };
 
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -166,63 +173,85 @@ export default function SellerDashboard() {
         {showAddForm && (
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <h2 className="text-lg font-semibold mb-4">
-              {editingProduct ? 'Edit Product' : 'Add New Product'}
+              {editingProduct ? "Edit Product" : "Add New Product"}
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Title
+                </label>
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Product title"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Price ($)
+                </label>
                 <input
                   type="number"
                   step="0.01"
                   value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="0.00"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Category
+                </label>
                 <select
                   value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select category</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Image URL
+                </label>
                 <input
                   type="url"
                   value={formData.imageUrl}
-                  onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, imageUrl: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="https://example.com/image.jpg"
                 />
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Description
+                </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Product description"
@@ -235,7 +264,7 @@ export default function SellerDashboard() {
                 onClick={handleSubmit}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
               >
-                {editingProduct ? 'Update Product' : 'Add Product'}
+                {editingProduct ? "Update Product" : "Add Product"}
               </button>
               <button
                 onClick={() => {
@@ -264,8 +293,11 @@ export default function SellerDashboard() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-              {filteredProducts.map(product => (
-                <div key={product.id} className="border rounded-lg overflow-hidden">
+              {filteredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="border rounded-lg overflow-hidden"
+                >
                   <div className="relative w-full h-48">
                     <Image
                       src={product.imageUrl}
@@ -274,21 +306,25 @@ export default function SellerDashboard() {
                       className="object-cover"
                     />
                   </div>
-                  
+
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-900">{product.title}</h3>
-                      <span className="text-lg font-bold text-blue-600">${product.price}</span>
+                      <h3 className="font-semibold text-gray-900">
+                        {product.title}
+                      </h3>
+                      <span className="text-lg font-bold text-blue-600">
+                        ${product.price}
+                      </span>
                     </div>
-                    
+
                     <p className="text-sm text-gray-600 mb-2 line-clamp-2">
                       {product.description}
                     </p>
-                    
+
                     <div className="text-xs text-gray-500 mb-4">
                       Category: {product.category}
                     </div>
-                    
+
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(product)}
