@@ -30,7 +30,7 @@ app.use(
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 
 // Routes
-app.use("/api", routes);
+app.use("/", routes);
 
 // Fallback
 app.use((req, res) => {
