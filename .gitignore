@@ -3,6 +3,7 @@ handcrafted-heaven-backend/node_modules/
 
 # Lock file
 handcrafted-heaven-backend/package-lock.json
+handcrafted-heaven-frontend/package-lock.json
 
 # Swagger output
 handcrafted-heaven-backend/config/swagger-output.json
