@@ -1,0 +1,5 @@
+/node_modules
+/package-lock.json
+/.env
+/config/swagger-output.json
+/dist
