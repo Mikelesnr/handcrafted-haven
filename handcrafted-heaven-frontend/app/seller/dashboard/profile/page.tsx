@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { Seller } from "@/lib/types";
 import { toast } from "react-hot-toast";
+import { AxiosError } from "axios";
 
 export default function SellerProfilePage() {
   const [seller, setSeller] = useState<Seller | null>(null);
@@ -22,14 +23,11 @@ export default function SellerProfilePage() {
           bio: res.data.bio ?? "",
           imageUrl: res.data.imageUrl ?? "",
         });
-      } catch (err) {
-        if (
-          err instanceof Error &&
-          typeof (err as any).response?.status === "number" &&
-          (err as any).response.status !== 404
-        ) {
+      } catch (error: unknown) {
+        const axiosErr = error as AxiosError;
+        if (axiosErr.response?.status !== 404) {
           toast.error("Error loading seller profile");
-          console.error("Seller fetch error:", err);
+          console.error("Seller fetch error:", error);
         }
       } finally {
         setLoading(false);
@@ -54,8 +52,8 @@ export default function SellerProfilePage() {
         });
         toast.success("Profile created!");
       }
-    } catch (err) {
-      console.error("Save failed:", err);
+    } catch (error: unknown) {
+      console.error("Save failed:", error);
       toast.error("Failed to save profile");
     }
   };
@@ -68,8 +66,8 @@ export default function SellerProfilePage() {
       setSeller(null);
       setFormData({ bio: "", imageUrl: "" });
       toast.success("Profile deleted");
-    } catch (err) {
-      console.error("Delete failed:", err);
+    } catch (error: unknown) {
+      console.error("Delete failed:", error);
       toast.error("Failed to delete profile");
     }
   };

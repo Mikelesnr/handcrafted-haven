@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+// import { useEffect } from "react";
+// import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Home, Package, User, Settings } from "lucide-react";
@@ -11,8 +11,8 @@ export default function SellerDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
+  const { loading } = useAuth();
+  // const _router = useRouter();
 
   const sellerNavItems = [
     { label: "Dashboard", href: "/seller/dashboard", icon: <Home size={18} /> },

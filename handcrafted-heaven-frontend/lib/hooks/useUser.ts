@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import { AxiosError } from "axios";
 
 type User = {
   role: "SELLER" | "BUYER" | "ADMIN";
@@ -15,17 +16,22 @@ export function useUser() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // ✅ Prevent running during SSR or static build
+    if (typeof window === "undefined") return;
+
     const fetchUser = async () => {
       try {
         const res = await api.get("/users/me");
         setUser(res.data);
-      } catch (err: any) {
-        if (err?.response?.status === 401) {
-          // Not logged in
-          setUser(null);
+      } catch (error: unknown) {
+        const axiosErr = error as AxiosError;
+        if (axiosErr.response?.status === 401) {
+          setUser(null); // Not logged in
         } else {
-          console.error("Unexpected error fetching user:", err);
-          setUser(null); // Fallback to null for safety
+          if (process.env.NODE_ENV === "development") {
+            console.error("Unexpected error fetching user:", error);
+          }
+          setUser(null);
         }
       } finally {
         setLoading(false);
