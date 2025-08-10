@@ -29,6 +29,26 @@ export interface Product {
   reviews: Review[];
 }
 
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  role: "SELLER" | "ADMIN" | "BUYER";
+  isEmailVerified: boolean;
+  verificationToken: string | null;
+  createdAt: string;
+}
+
+export interface Seller {
+  id: number;
+  userId: number;
+  bio: string;
+  imageUrl: string;
+  user: User;
+  products: Product[];
+}
+
 export interface PaginationProps {
   currentPage: number;
   totalPages: number;

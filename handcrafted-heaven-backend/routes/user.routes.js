@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const { protect } = require("../utilities/middleware");
 
 router.get(
   "/",
@@ -18,38 +19,32 @@ router.get(
   userController.getAllUsers
 );
 
-router.post(
-  "/",
+router.get(
+  "/me",
+  protect,
   /* #swagger.tags = ['Users']
-     #swagger.summary = 'Create new user'
-     #swagger.description = 'Create a new user account with hashed password'
-     #swagger.parameters['body'] = {
-        in: 'body',
-        description: 'User registration fields',
-        required: true,
-        schema: {
-          name: "Jane Doe",
-          email: "jane@example.com",
-          password: "SecurePass1!",
-          role: "CUSTOMER"
-        }
-     }
-     #swagger.responses[201] = {
-         description: 'User created successfully',
+     #swagger.summary = 'Get authenticated user'
+     #swagger.description = 'Returns the profile of the currently authenticated user'
+     #swagger.responses[200] = {
+         description: 'Authenticated user profile',
          schema: { $ref: '#/components/schemas/User' }
      }
-     #swagger.responses[400] = {
-         description: 'Invalid input or creation error'
+     #swagger.responses[401] = {
+         description: 'Unauthorized'
+     }
+     #swagger.responses[404] = {
+         description: 'User not found'
      }
      #swagger.responses[500] = {
-         description: 'Server error while creating user'
+         description: 'Server error while fetching profile'
      }
   */
-  userController.createUser
+  userController.getAuthenticatedUser
 );
 
 router.put(
   "/:id",
+  protect,
   /* #swagger.tags = ['Users']
      #swagger.summary = 'Update user'
      #swagger.description = 'Update user details like name, email, role, or verification status'
@@ -89,6 +84,7 @@ router.put(
 
 router.delete(
   "/:id",
+  protect,
   /* #swagger.tags = ['Users']
      #swagger.summary = 'Delete user'
      #swagger.description = 'Delete a user by their ID'
