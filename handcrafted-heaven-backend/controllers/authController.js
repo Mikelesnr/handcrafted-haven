@@ -48,12 +48,10 @@ exports.register = async (req, res) => {
       },
     });
 
-    const isProd = process.env.NODE_ENV === "production";
-
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -73,6 +71,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({
       user: {
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -82,7 +81,9 @@ exports.register = async (req, res) => {
       message: "Verification email sent",
     });
   } catch (err) {
-    res.status(400).json({ error: "Registration failed", details: err });
+    res
+      .status(400)
+      .json({ error: "Registration failed", details: err.message });
   }
 };
 
@@ -133,6 +134,7 @@ exports.login = async (req, res) => {
 
     res.json({
       user: {
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -141,7 +143,17 @@ exports.login = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: "Login error", details: err });
+    res.status(500).json({
+      error: "Login error",
+      details: isProduction
+        ? err.message // Only show message in production
+        : {
+            message: err.message,
+            stack: err.stack,
+            name: err.name,
+            code: err.code || null,
+          },
+    });
   }
 };
 

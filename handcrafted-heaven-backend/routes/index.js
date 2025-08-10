@@ -17,13 +17,16 @@ const reviewRoutes = require("./review.routes"); // #swagger.tags = ['Reviews']
 const orderRoutes = require("./order.routes"); // #swagger.tags = ['Orders']
 const paymentRoutes = require("./payment.routes"); // #swagger.tags = ['Payments']
 const authRoutes = require("./auth.routes"); // #swagger.tags = ['Auth']
+const homeController = require("../controllers/homeController.js");
 
-router.use("/users", userRoutes);
-router.use("/sellers", sellerRoutes);
-router.use("/products", productRoutes);
-router.use("/reviews", reviewRoutes);
-router.use("/orders", orderRoutes);
-router.use("/payments", paymentRoutes);
-router.use("/auth", authRoutes);
+router.get("/", homeController.getHome);
+
+router.use("/api/users", userRoutes);
+router.use("/api/sellers", sellerRoutes);
+router.use("/api/products", productRoutes);
+router.use("/api/reviews", reviewRoutes);
+router.use("/api/orders", orderRoutes);
+router.use("/api/payments", paymentRoutes);
+router.use("/api/auth", authRoutes);
 
 module.exports = router;

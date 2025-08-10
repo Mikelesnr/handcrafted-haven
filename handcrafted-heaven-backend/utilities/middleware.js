@@ -5,8 +5,11 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
 
+// ✅ Authentication middleware
 const protect = async (req, res, next) => {
   const token = req.cookies?.token;
+  console.log("Token from cookies:", token); // Debugging line
+
   if (!token) return res.status(401).json({ error: "Not authenticated" });
 
   try {
@@ -37,4 +40,31 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+// ✅ Role-based authorization middlewares
+const isAdmin = (req, res, next) => {
+  if (req.user?.role !== "ADMIN") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+};
+
+const isSeller = (req, res, next) => {
+  if (req.user?.role !== "SELLER") {
+    return res.status(403).json({ error: "Seller access required" });
+  }
+  next();
+};
+
+const isCustomer = (req, res, next) => {
+  if (req.user?.role !== "CUSTOMER") {
+    return res.status(403).json({ error: "Customer access required" });
+  }
+  next();
+};
+
+module.exports = {
+  protect,
+  isAdmin,
+  isSeller,
+  isCustomer,
+};

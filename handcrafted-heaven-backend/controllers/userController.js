@@ -29,53 +29,107 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.createUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+exports.getAuthenticatedUser = async (req, res) => {
+  const requester = req.user;
+
+  if (!requester) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
-    const hashedPassword = await require("bcrypt").hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role,
-        isEmailVerified: true, // optional: auto-verify or pending
+    const user = await prisma.user.findUnique({
+      where: { id: requester.id },
+      include: {
+        reviews: true,
+        orders: true,
+        seller: true,
       },
     });
-    res.status(201).json(user);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
   } catch (err) {
-    res.status(400).json({ error: "User creation failed", details: err });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch user profile", details: err });
   }
 };
 
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email, role, isEmailVerified } = req.body;
+  const { name, email } = req.body;
+
+  const userId = parseInt(id);
+  const requester = req.user;
+
+  if (!requester) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const isSelf = requester.id === userId;
+  const isAdmin = requester.role === "ADMIN";
+
+  if (!isSelf && !isAdmin) {
+    return res
+      .status(403)
+      .json({ error: "Forbidden: insufficient permissions" });
+  }
 
   try {
+    const existingUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!existingUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const emailChanged = email && email !== existingUser.email;
+
     const updatedUser = await prisma.user.update({
-      where: { id: parseInt(id) },
+      where: { id: userId },
       data: {
         name,
         email,
-        role,
-        isEmailVerified,
+        isEmailVerified: emailChanged ? false : existingUser.isEmailVerified,
       },
     });
+
+    if (emailChanged) {
+      await sendVerificationEmail(updatedUser); // 🔔 Trigger verification flow
+    }
+
     res.json(updatedUser);
   } catch (err) {
-    res
-      .status(404)
-      .json({ error: "User not found or update failed", details: err });
+    res.status(500).json({ error: "Update failed", details: err });
   }
 };
 
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
 
+  const userId = parseInt(id);
+  const requester = req.user;
+
+  if (!requester) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const isSelf = requester.id === userId;
+  const isAdmin = requester.role === "ADMIN";
+
+  if (!isSelf && !isAdmin) {
+    return res
+      .status(403)
+      .json({ error: "Forbidden: insufficient permissions" });
+  }
+
   try {
     await prisma.user.delete({
-      where: { id: parseInt(id) },
+      where: { id: userId },
     });
     res.json({ message: "User deleted successfully" });
   } catch (err) {
