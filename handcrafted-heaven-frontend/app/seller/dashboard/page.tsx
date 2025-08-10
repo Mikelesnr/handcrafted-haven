@@ -5,6 +5,8 @@ import Link from "next/link";
 import api from "@/lib/api";
 import { Seller } from "@/lib/types";
 import { toast } from "react-hot-toast";
+import Image from "next/image";
+import { AxiosError } from "axios";
 
 export default function SellerDashboardPage() {
   const [seller, setSeller] = useState<Seller | null>(null);
@@ -18,12 +20,10 @@ export default function SellerDashboardPage() {
         setSeller(res.data);
         setProfileExists(true);
       })
-      .catch((err) => {
-        if (
-          err instanceof Error &&
-          typeof (err as any).response?.status === "number" &&
-          (err as any).response.status === 404
-        ) {
+      .catch((err: unknown) => {
+        const axiosErr = err as AxiosError;
+
+        if (axiosErr.response?.status === 404) {
           setProfileExists(false);
         } else {
           toast.error("Failed to load seller profile");
@@ -59,7 +59,7 @@ export default function SellerDashboardPage() {
   }
 
   if (!seller) {
-    return null; // satisfies TypeScript narrowing
+    return null;
   }
 
   const products = seller.products ?? [];
@@ -68,11 +68,14 @@ export default function SellerDashboardPage() {
   return (
     <div className="max-w-4xl mx-auto py-6 text-gray-800">
       <div className="flex items-center gap-4 mb-6">
-        <img
-          src={seller.imageUrl}
-          alt="Seller profile"
+        <Image
+          src={seller.imageUrl || "/profile.jpeg"}
+          alt="Profile Picture"
+          width={40}
+          height={40}
           className="w-16 h-16 rounded-full object-cover"
         />
+
         <div>
           <h1 className="text-2xl font-bold">{seller.user.name}</h1>
           <p className="text-gray-600">{seller.bio}</p>

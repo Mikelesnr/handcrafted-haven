@@ -9,6 +9,7 @@ import ProductForm from "@/components/seller/ProductForm";
 import ProductGrid from "@/components/seller/ProductGrid";
 import { Product } from "@/lib/types";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 export default function SellerProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -41,8 +42,9 @@ export default function SellerProductsPage() {
         setProducts(response.data.products ?? []);
         setSellerId(response.data.id);
         setProfileExists(true);
-      } catch (error: any) {
-        if (error?.response?.status === 404) {
+      } catch (error: unknown) {
+        const axiosErr = error as AxiosError;
+        if (axiosErr.response?.status === 404) {
           setProfileExists(false);
         } else {
           toast.error("Failed to fetch seller data");
@@ -87,7 +89,7 @@ export default function SellerProductsPage() {
       resetForm();
       const updated = await api.get("/sellers/me");
       setProducts(updated.data.products ?? []);
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error("Failed to save product");
       console.error(error);
     }
@@ -113,7 +115,7 @@ export default function SellerProductsPage() {
       toast.success("Product deleted successfully!");
       const updated = await api.get("/sellers/me");
       setProducts(updated.data.products ?? []);
-    } catch (error) {
+    } catch (error: unknown) {
       toast.error("Failed to delete product");
       console.error(error);
     }
