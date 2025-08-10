@@ -1,6 +1,7 @@
-// app/(admin)/dashboard/layout.tsx
+"use client";
+
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { Home, Package, User, Settings } from "lucide-react";
+import { Home, PackageSearch, Users, Settings } from "lucide-react";
 
 export default function AdminDashboardLayout({
   children,
@@ -8,16 +9,20 @@ export default function AdminDashboardLayout({
   children: React.ReactNode;
 }) {
   const adminNavItems = [
-    { label: "Dashboard", href: "/admin/dashboard", icon: <Home size={18} /> },
+    {
+      label: "Dashboard",
+      href: "/admin/dashboard",
+      icon: <Home size={18} />,
+    },
     {
       label: "Products",
       href: "/admin/dashboard/products",
-      icon: <Package size={18} />,
+      icon: <PackageSearch size={18} />,
     },
     {
       label: "Users",
       href: "/admin/dashboard/users",
-      icon: <User size={18} />,
+      icon: <Users size={18} />,
     },
     {
       label: "Settings",
