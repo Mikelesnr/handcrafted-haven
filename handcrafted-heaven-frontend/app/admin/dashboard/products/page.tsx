@@ -15,6 +15,8 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const categories = [
     "Ceramics",
@@ -25,20 +27,58 @@ export default function AdminProductsPage() {
   ];
 
   useEffect(() => {
-    fetchProducts();
+    fetchAllProducts();
   }, []);
 
   useEffect(() => {
     filterProducts();
   }, [products, selectedCategory, searchTerm]);
 
-  const fetchProducts = async () => {
+  const fetchAllProducts = async () => {
     try {
-      const response = await api.get("/products?limit=1000"); // Get all products
-      setProducts(response.data.data || []);
+      const allProducts: Product[] = [];
+      let page = 1;
+      let hasMorePages = true;
+
+      // Fetch all products by pagination since /products?limit=1000 might not work
+      while (hasMorePages && page <= 10) { // Safety limit of 10 pages
+        try {
+          const response = await api.get(`/products?page=${page}`);
+          const pageProducts = response.data.data || [];
+          
+          if (pageProducts.length === 0) {
+            hasMorePages = false;
+          } else {
+            allProducts.push(...pageProducts);
+            page++;
+            
+            // Check if we've reached the last page
+            if (response.data.currentPage >= response.data.totalPages) {
+              hasMorePages = false;
+            }
+          }
+        } catch (pageError) {
+          console.error(`Error fetching page ${page}:`, pageError);
+          hasMorePages = false;
+        }
+      }
+
+      setProducts(allProducts);
+      console.log(`Fetched ${allProducts.length} products total`);
+      
     } catch (error) {
-      toast.error("Failed to fetch products");
-      console.error("Fetch error:", error);
+      console.error("Error fetching products:", error);
+      toast.error("Failed to fetch products. Using fallback method...");
+      
+      // Fallback: try to get just the first page
+      try {
+        const response = await api.get("/products");
+        setProducts(response.data.data || []);
+        toast.success("Loaded available products");
+      } catch (fallbackError) {
+        console.error("Fallback also failed:", fallbackError);
+        toast.error("Unable to load products");
+      }
     } finally {
       setLoading(false);
     }
@@ -59,7 +99,8 @@ export default function AdminProductsPage() {
       filtered = filtered.filter(
         (product) =>
           product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.seller?.user?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+          product.seller?.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.seller?.bio?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -74,22 +115,43 @@ export default function AdminProductsPage() {
       toast.success("Product deleted successfully!");
       setProducts(products.filter((p) => p.id !== productId));
     } catch (error) {
-      toast.error("Failed to delete product");
       console.error("Delete error:", error);
+      toast.error("Failed to delete product. You may not have permission.");
     }
   };
 
   const handleBulkDelete = async (productIds: number[]) => {
     if (!confirm(`Are you sure you want to delete ${productIds.length} products?`)) return;
 
+    const results = {
+      success: 0,
+      failed: 0
+    };
+
     try {
-      await Promise.all(
-        productIds.map((id) => api.delete(`/products/${id}`))
-      );
-      toast.success(`${productIds.length} products deleted successfully!`);
-      setProducts(products.filter((p) => !productIds.includes(p.id)));
+      // Delete products one by one and track results
+      for (const id of productIds) {
+        try {
+          await api.delete(`/products/${id}`);
+          results.success++;
+        } catch (error) {
+          console.error(`Failed to delete product ${id}:`, error);
+          results.failed++;
+        }
+      }
+
+      if (results.success > 0) {
+        toast.success(`${results.success} products deleted successfully!`);
+        // Refresh the products list
+        await fetchAllProducts();
+      }
+      
+      if (results.failed > 0) {
+        toast.error(`Failed to delete ${results.failed} products`);
+      }
+      
     } catch (error) {
-      toast.error("Failed to delete products");
+      toast.error("Bulk delete operation failed");
       console.error("Bulk delete error:", error);
     }
   };
