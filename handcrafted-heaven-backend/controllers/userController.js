@@ -50,11 +50,25 @@ exports.getAuthenticatedUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    res.json(user);
+    // Manually shape the response to exclude sensitive fields
+    const sanitizedUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      emailVerified: user.isEmailVerified,
+      profileImage: user.profileImage || null,
+      reviews: user.reviews,
+      orders: user.orders,
+      seller: user.seller,
+    };
+
+    res.json(sanitizedUser);
   } catch (err) {
-    res
-      .status(500)
-      .json({ error: "Failed to fetch user profile", details: err });
+    res.status(500).json({
+      error: "Failed to fetch user profile",
+      details: err.message || err,
+    });
   }
 };
 

@@ -1,9 +1,8 @@
 "use client";
-// components/layouts/DashboardLayout.tsx
+
 import { LogOut, Home, Package, User, Settings } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { useUser } from "@/lib/hooks/useUser";
 
 export type NavItem = {
   label: string;
@@ -11,7 +10,6 @@ export type NavItem = {
   icon: React.ReactNode;
 };
 
-// ✅ Default nav items with icons
 const defaultNavItems: NavItem[] = [
   { label: "Dashboard", href: "/seller/dashboard", icon: <Home size={18} /> },
   {
@@ -33,17 +31,14 @@ const defaultNavItems: NavItem[] = [
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
-  navItems?: NavItem[]; // ✅ Made optional
+  navItems?: NavItem[];
 };
 
 export default function DashboardLayout({
   children,
   navItems,
 }: DashboardLayoutProps) {
-  const { logout } = useAuth();
-  const { user, loading } = useUser();
-
-  console.log("Auth user:", user);
+  const { user, logout, loading } = useAuth(); // ✅ Direct from context
 
   const roleLabels: Record<string, string> = {
     SELLER: "Seller",
@@ -51,7 +46,6 @@ export default function DashboardLayout({
     ADMIN: "Admin",
   };
 
-  // ✅ Use fallback if navItems is not provided
   const itemsToRender = navItems ?? defaultNavItems;
 
   return (

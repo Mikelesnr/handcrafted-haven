@@ -18,6 +18,57 @@ router.get(
   productController.getAllProducts
 );
 
+router.get(
+  "/categories",
+  /* #swagger.tags = ['Products']
+     #swagger.summary = 'Get all product categories'
+     #swagger.description = 'Retrieve all categories used to classify products. This route is public and does not require authentication.'
+     #swagger.responses[200] = {
+         description: 'Categories retrieved successfully',
+         schema: {
+           categories: [
+             {
+               id: 1,
+               name: "Electronics"
+             }
+           ]
+         }
+     }
+     #swagger.responses[500] = {
+         description: 'Internal server error'
+     }
+  */
+  productController.getCategories
+);
+
+// routes/productRoutes.ts
+router.get(
+  "/filter",
+  /* #swagger.tags = ['Products']
+     #swagger.summary = 'Get filtered products by category'
+     #swagger.description = 'Returns paginated products filtered by category name'
+     #swagger.parameters['category'] = {
+       in: 'query',
+       description: 'Category name to filter by',
+       required: false,
+       type: 'string'
+     }
+     #swagger.responses[200] = {
+       description: 'Filtered products retrieved successfully',
+       schema: {
+         data: [{ $ref: '#/components/schemas/Product' }],
+         page: 1,
+         totalPages: 5,
+         totalItems: 44
+       }
+     }
+     #swagger.responses[500] = {
+       description: 'Internal server error'
+     }
+  */
+  productController.getFilteredProducts
+);
+
 router.post(
   "/",
   /* #swagger.tags = ['Products']
@@ -28,9 +79,9 @@ router.post(
         description: 'Details of the product to create',
         required: true,
         schema: {
-          title: "Rustic Clay Bowl",
-          description: "Handcrafted with local clay",
-          price: 45.0,
+          tiscription: "Handcrafted with local clay",
+          prtle: "Rustic Clay Bowl",
+          deice: 45.0,
           imageUrl: "https://example.com/images/bowl.png",
           category: "Ceramics",
           sellerId: 1

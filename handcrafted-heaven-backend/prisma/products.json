@@ -3,192 +3,176 @@
     "title": "Rustic Clay Pitcher",
     "description": "Earth-toned pitcher with hand-painted fern motifs.",
     "price": 38.5,
-    "category": "Ceramics",
+    "categoryId": 1,
     "sellerId": 1,
-    "imageUrl": "https://www.etsy.com/listing/481621488/rustic-drink-jug-unique-jug-wheel-thrown"
+    "imageUrl": "https://i.etsystatic.com/13254982/r/il/819947/2243066670/il_794xN.2243066670_fvis.jpg"
   },
   {
     "title": "Hand-painted Clay Mug",
     "description": "Nature-themed ceramic mug featuring floral accents.",
     "price": 26.0,
-    "category": "Ceramics",
+    "categoryId": 1,
     "sellerId": 1,
-    "imageUrl": "https://www.etsy.com/listing/1455994320/beautiful-mexican-jarrito-mug-art"
+    "imageUrl": "https://i.etsystatic.com/17864701/r/il/fb9018/4903660853/il_794xN.4903660853_rqo8.jpg"
   },
   {
     "title": "Ceramic Wall Mask",
     "description": "Tribal-inspired handmade mask for interior decor.",
     "price": 52.25,
-    "category": "Ceramics",
+    "categoryId": 1,
     "sellerId": 1,
-    "imageUrl": "https://www.novica.com/p/handmade-mexican-folk-art-ceramic-wall-mask/188126"
+    "imageUrl": "https://images1.novica.net/pictures/7/p18"
   },
   {
     "title": "Teak Serving Tray",
     "description": "Hand-carved tray with a weathered finish from salvaged wood.",
     "price": 47.0,
-    "category": "Woodwork",
+    "categoryId": 2,
     "sellerId": 2,
-    "imageUrl": "https://www.amazon.com/Bare-Decor-Vivi-Serving-Solid/dp/B00MC4WFRS"
+    "imageUrl": "https://m.media-amazon.com/images/I/818+6dq3r4L._AC_SX300_SY300_QL70_FMwebp_.jpg"
   },
   {
     "title": "Reclaimed Wood Cutting Board",
     "description": "Crafted from vintage oak and polished to perfection.",
     "price": 35.75,
-    "category": "Woodwork",
+    "categoryId": 2,
     "sellerId": 2,
-    "imageUrl": "https://www.etsy.com/listing/1741065145/reclaimed-oak-wood-cutting-board-rustic"
+    "imageUrl": "https://i.etsystatic.com/42146919/r/il/a9a60c/6032112484/il_794xN.6032112484_n61h.jpg"
   },
   {
     "title": "Cedar Spice Rack",
     "description": "Space-efficient handcrafted spice shelf with rustic grain.",
     "price": 28.0,
-    "category": "Woodwork",
+    "categoryId": 2,
     "sellerId": 2,
-    "imageUrl": "https://www.etsy.com/listing/1255424493/cedar-spice-rack"
+    "imageUrl": "https://i.etsystatic.com/36211479/r/il/675865/4186603674/il_794xN.4186603674_qvbw.jpg"
   },
   {
     "title": "Tribal Pattern Tapestry",
     "description": "Bold wall tapestry crafted with organic cotton and earthy hues.",
     "price": 66.5,
-    "category": "Textiles",
+    "categoryId": 3,
     "sellerId": 3,
-    "imageUrl": "https://www.amazon.com/Ambesonne-Tapestry-Pattern-American-Bohemian/dp/B06ZZC52MD"
+    "imageUrl": "https://m.media-amazon.com/images/I/919NP4i4yoL._AC_SX679_.jpg"
   },
   {
     "title": "Woven Plant Holder",
     "description": "Stylish macrame holder for hanging pots and planters.",
     "price": 21.5,
-    "category": "Textiles",
+    "categoryId": 3,
     "sellerId": 3,
-    "imageUrl": "https://www.amazon.com/WYSRJ-Hanging-Planter-Macrame-Decorative/dp/B09TPHW1FW"
+    "imageUrl": "https://m.media-amazon.com/images/I/61M3SZT4JaL._AC_SX679_.jpg"
   },
   {
     "title": "Geometric Cushion Cover",
     "description": "Handstitched cotton cover with traditional prints.",
     "price": 18.75,
-    "category": "Textiles",
+    "categoryId": 3,
     "sellerId": 3,
-    "imageUrl": "https://www.amazon.com/Tycdiose-Geometric-Decorative-Cushion-Pillowcase/dp/B0CQ8DWPP8"
+    "imageUrl": "https://m.media-amazon.com/images/I/81NQKZeTfQL._AC_SY300_SX300_QL70_FMwebp_.jpg"
   },
   {
     "title": "Iridescent Glass Orb",
     "description": "Sun-catcher orb with fused rainbow glass layers.",
     "price": 33.75,
-    "category": "Glasswork",
+    "categoryId": 4,
     "sellerId": 4,
-    "imageUrl": "https://www.amazon.com/DomeStar-Decorative-Centerpiece-Iridescent-Decorate/dp/B0CNC4L7KF"
+    "imageUrl": "https://m.media-amazon.com/images/I/81erfxgLcSL._AC_SL1500_.jpg"
   },
   {
     "title": "Fused Glass Landscape Panel",
     "description": "Abstract glass panel capturing mountain vistas.",
     "price": 59.9,
-    "category": "Glasswork",
+    "categoryId": 4,
     "sellerId": 4,
-    "imageUrl": "https://www.etsy.com/listing/1226828962/banff-artfused-glass-wall-artglass"
+    "imageUrl": "https://i.etsystatic.com/16532969/r/il/172a92/3950182843/il_794xN.3950182843_tjb3.jpg"
   },
   {
     "title": "Glass Pendant Set",
     "description": "Necklace and earrings set made from colored glass.",
     "price": 42.5,
-    "category": "Glasswork",
+    "categoryId": 4,
     "sellerId": 4,
-    "imageUrl": "https://www.amazon.com/SUNNYCLUE-Colorful-Assorted-Lampwork-Necklace/dp/B07JR9B4FX"
+    "imageUrl": "https://m.media-amazon.com/images/I/71b5Vt48CpL._AC_SX679_.jpg"
   },
   {
     "title": "Forged Iron Tealight Holder",
     "description": "Hammered finish with intricate botanical engravings.",
     "price": 29.99,
-    "category": "Metalcraft",
+    "categoryId": 5,
     "sellerId": 5,
-    "imageUrl": "https://www.volcanoforge.com/shop/forged-iron-tealight-holder"
+    "imageUrl": "https://images.squarespace-cdn.com/content/v1/59718a0886e6c01fe3cdfa1b/1500859360368-PHS9Y21WVMVC6JD6YX8X/IMG_4968.JPG?format=1000w"
   },
   {
     "title": "Steel Wall Hook Set",
     "description": "Decorative hooks with nature-inspired design.",
     "price": 19.5,
-    "category": "Metalcraft",
+    "categoryId": 5,
     "sellerId": 5,
-    "imageUrl": "https://www.amazon.com/Wrought-Mounted-Blacksmith-Handmade-Classic/dp/B0BRKZ2M3C"
+    "imageUrl": "https://m.media-amazon.com/images/I/81o45L3FFKL._AC_SX679_PIbundle-10,TopRight,0,0_SH20_.jpg"
   },
   {
     "title": "Wrought Iron Shelf Brackets",
     "description": "Floral scrolls forged into supportive brackets.",
     "price": 24.75,
-    "category": "Metalcraft",
+    "categoryId": 5,
     "sellerId": 5,
-    "imageUrl": "https://www.signaturehardware.com/old-fashioned-cast-iron-shelf-bracket/922222.html"
+    "imageUrl": "https://images.signaturehardware.com/i/signaturehdwr/422812-Grigham-33-fh-sink-WH-angle-MV60.jpg?w=460&fmt=auto"
   },
   {
     "title": "Floral Ceramic Tea Set",
     "description": "A set of mugs and saucer hand-painted with floral details.",
     "price": 58.5,
-    "category": "Ceramics",
+    "categoryId": 1,
     "sellerId": 6,
-    "imageUrl": "https://www.amazon.com/RIS-LAN-afternoon-exquisite-packaging/dp/B0DD49PMF3"
+    "imageUrl": "https://m.media-amazon.com/images/I/81+9DOs2NML._AC_SY300_SX300_QL70_FMwebp_.jpg"
   },
   {
     "title": "Nature Motif Clay Plate",
     "description": "Bold leaf-print ceramic plate with natural glaze.",
     "price": 32.25,
-    "category": "Ceramics",
+    "categoryId": 1,
     "sellerId": 6,
-    "imageUrl": "https://www.eventbrite.com/e/clay-handbuilt-plates-nature-motifs-tickets-908618531487"
+    "imageUrl": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F770749609%2F79316885689%2F1%2Foriginal.20240518-011219?w=940&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C785%2C1440%2C720&s=0a9b1e78b9980a73411556197a496a38"
   },
   {
     "title": "Hand-painted Pot",
     "description": "Floral-themed flower pot with a smooth ceramic finish.",
     "price": 27.0,
-    "category": "Ceramics",
+    "categoryId": 1,
     "sellerId": 6,
-    "imageUrl": "https://www.etsy.com/listing/160455002/hand-painted-clay-flower-pot-gentle"
+    "imageUrl": "https://i.etsystatic.com/6971633/r/il/95df02/493423245/il_794xN.493423245_3wlf.jpg"
   },
   {
     "title": "Chunky Knit Blanket",
     "description": "Thick woven blanket for cozy evenings.",
     "price": 84.25,
-    "category": "Textiles",
+    "categoryId": 3,
     "sellerId": 7,
-    "imageUrl": "https://www.amazon.com/SAMIAH-LUXE-Chunky-Blanket-Buttercream/dp/B09KTBXHQQ"
+    "imageUrl": "https://m.media-amazon.com/images/I/81lUSTeBjFL._AC_SY300_SX300_QL70_FMwebp_.jpg"
   },
   {
     "title": "Fingerless Wool Gloves",
     "description": "Warm and breathable gloves with a ribbed texture.",
     "price": 15.5,
-    "category": "Textiles",
+    "categoryId": 3,
     "sellerId": 7,
-    "imageUrl": "https://foxsox.com/products/mid-weight-fingerless-ragg-glove"
+    "imageUrl": "https://foxsox.com/cdn/shop/products/mid-weight-ragg-fingerless-glove-brown-tweed-small-fox-river-socks-254817.jpg?v=1637359260&width=1800"
   },
   {
     "title": "Knitted Beanie",
     "description": "Soft beanie with hand-dyed color gradients.",
     "price": 21.25,
-    "category": "Textiles",
+    "categoryId": 3,
     "sellerId": 7,
-    "imageUrl": "https://www.amazon.com/dp/B0B6XKZJZP"
+    "imageUrl": "https://m.media-amazon.com/images/I/51DbTAReFjL._AC_UL320_.jpg"
   },
   {
     "title": "Rustic Wood Coasters (Set of 4)",
     "description": "Made from reclaimed cedar, finished with beeswax.",
     "price": 22.75,
-    "category": "Woodwork",
+    "categoryId": 2,
     "sellerId": 8,
-    "imageUrl": "https://www.etsy.com/listing/1020837187/vintage-wood-serving-tray-set-with-6"
-  },
-  {
-    "title": "Timber Pen Stand",
-    "description": "Hand-sanded pen holder with grooved accents.",
-    "price": 18.0,
-    "category": "Woodwork",
-    "sellerId": 8,
-    "imageUrl": "https://www.etsy.com/listing/730770146/vintage-teak-wood-three-sectioned"
-  },
-  {
-    "title": "Vintage Style Shelf",
-    "description": "Small display shelf made from upcycled mahogany.",
-    "price": 36.0,
-    "category": "Woodwork",
-    "sellerId": 8,
-    "imageUrl": "https://www.etsy.com/listing/492260081/vintage-style-shelf-solid-pine-country"
+    "imageUrl": "https://i.etsystatic.com/24597679/r/il/ee692d/3219265641/il_794xN.3219265641_artt.jpg"
   }
 ]

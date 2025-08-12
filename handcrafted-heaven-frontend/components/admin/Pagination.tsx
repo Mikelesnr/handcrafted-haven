@@ -1,6 +1,12 @@
 "use client";
 
-export default function Pagination({ page, totalPages, onPageChange }) {
+type Props = {
+  page: number;
+  totalPages: number;
+  onPageChange: (newPage: number) => void;
+};
+
+export default function Pagination({ page, totalPages, onPageChange }: Props) {
   return (
     <div className="flex justify-center mt-4 gap-2">
       <button
@@ -23,4 +29,3 @@ export default function Pagination({ page, totalPages, onPageChange }) {
     </div>
   );
 }
-

@@ -1,17 +1,18 @@
 import { useState } from "react";
-import api from "@/lib/api";
 import toast from "react-hot-toast";
 import { useModalStore } from "@/context/ModalContext";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginForm({ onSuccess }: { onSuccess: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { openModal, closeModal } = useModalStore();
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     try {
-      await api.post("/auth/login", { email, password });
+      await login(email, password);
       toast.success("✅ Logged in successfully");
       onSuccess();
     } catch (error) {

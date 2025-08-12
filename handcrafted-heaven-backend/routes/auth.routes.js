@@ -211,4 +211,27 @@ router.post(
   authController.logout
 );
 
+router.get(
+  "/me",
+  protect,
+  /* #swagger.tags = ['Users']
+     #swagger.summary = 'Get authenticated user'
+     #swagger.description = 'Returns the profile of the currently authenticated user'
+     #swagger.responses[200] = {
+         description: 'Authenticated user profile',
+         schema: { $ref: '#/components/schemas/User' }
+     }
+     #swagger.responses[401] = {
+         description: 'Unauthorized'
+     }
+     #swagger.responses[404] = {
+         description: 'User not found'
+     }
+     #swagger.responses[500] = {
+         description: 'Server error while fetching profile'
+     }
+  */
+  authController.getAuthenticatedUser
+);
+
 module.exports = router;

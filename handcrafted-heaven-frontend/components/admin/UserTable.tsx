@@ -2,7 +2,22 @@
 
 import UserRow from "./UserRow";
 
-export default function UserTable({ users }) {
+type Props = {
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+    createdAt: string;
+    orders: Array<number>;
+    seller?: boolean;
+    Image?: {
+      url: string;
+    };
+  };
+};
+
+export default function UserTable({ users }: { users: Props["user"][] }) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white shadow rounded-md">
@@ -26,4 +41,3 @@ export default function UserTable({ users }) {
     </div>
   );
 }
-

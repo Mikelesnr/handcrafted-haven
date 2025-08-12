@@ -1,6 +1,22 @@
 "use client";
 
-export default function CategoryFilter({ categories, selected, onChange }) {
+type Category = {
+  id: string;
+  name: string;
+  createdAt: string;
+};
+
+type Props = {
+  categories: Category[];
+  selected: string;
+  onChange: (value: string) => void;
+};
+
+export default function CategoryFilter({
+  categories,
+  selected,
+  onChange,
+}: Props) {
   return (
     <div className="mb-4">
       <label className="mr-2 font-medium">Filter by Category:</label>
@@ -19,4 +35,3 @@ export default function CategoryFilter({ categories, selected, onChange }) {
     </div>
   );
 }
-

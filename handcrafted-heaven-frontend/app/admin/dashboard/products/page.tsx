@@ -1,75 +1,117 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import api from "@/lib/api";
+import { useEffect, useState } from "react";
 import ProductTable from "@/components/admin/ProductTable";
-import CategoryFilter from "@/components/admin/CategoryFilter";
-import toast from "react-hot-toast";
+import { Product } from "@/lib/types";
+import api from "@/lib/api";
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [categories, setCategories] = useState<string[]>([]);
 
-  // Fetch products & categories
+  // ✅ Fetch categories from correct route
   useEffect(() => {
-    setLoading(true);
-    Promise.all([
-      api.get("/products"),
-      api.get("/categories")  // assuming categories endpoint exists
-    ])
-      .then(([productsRes, categoriesRes]) => {
-        setProducts(productsRes.data);
-        setFilteredProducts(productsRes.data);
-        setCategories(categoriesRes.data);
-      })
-      .catch((err) => toast.error("Failed to load products or categories"))
-      .finally(() => setLoading(false));
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get<{ categories: { name: string }[] }>(
+          "/products/categories"
+        );
+        setCategories(res.data.categories.map((c) => c.name));
+      } catch (err) {
+        console.error("Error fetching categories", err);
+      }
+    };
+    fetchCategories();
   }, []);
 
-  // Filter products by category
+  // ✅ Fetch filtered products
   useEffect(() => {
-    if (selectedCategory === "all") {
-      setFilteredProducts(products);
-    } else {
-      setFilteredProducts(
-        products.filter((p) => p.category === selectedCategory)
-      );
-    }
-  }, [selectedCategory, products]);
+    const fetchFilteredProducts = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get<{
+          data: Product[];
+          totalPages: number;
+        }>(`/products/filter?category=${categoryFilter}&page=${page}`);
+        setProducts(res.data.data);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error("Error fetching filtered products", err);
+        setProducts([]);
+        setTotalPages(1);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Delete product handler
-  const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    fetchFilteredProducts();
+  }, [categoryFilter, page]);
 
+  // ✅ Type-safe delete
+  const handleDelete = async (productId: number | string) => {
     try {
-      await api.delete(`/products/${id}`);
-      toast.success("Product deleted");
-      // Remove product from state
-      setProducts((prev) => prev.filter((p) => p.id !== id));
+      await api.delete(`/products/${productId}`);
+      setProducts((prev) => prev.filter((p) => p.id !== Number(productId)));
     } catch (err) {
-      toast.error("Failed to delete product");
+      console.error("Error deleting product", err);
     }
   };
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6">Product Management</h1>
+      <h1 className="text-2xl font-semibold mb-4">Manage Products</h1>
 
-      <CategoryFilter
-        categories={categories}
-        selected={selectedCategory}
-        onChange={setSelectedCategory}
-      />
+      <div className="flex items-center gap-4 mb-6">
+        <label htmlFor="category" className="text-sm font-medium">
+          Filter by Category:
+        </label>
+        <select
+          id="category"
+          value={categoryFilter}
+          onChange={(e) => {
+            setCategoryFilter(e.target.value);
+            setPage(1); // Reset page on filter change
+          }}
+          className="border px-2 py-1 rounded"
+        >
+          <option value="all">All Categories</option>
+          {categories.map((name) => (
+            <option key={name} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {loading ? (
         <p className="text-center text-gray-500 mt-4">Loading products...</p>
       ) : (
-        <ProductTable products={filteredProducts} onDelete={handleDelete} />
+        <ProductTable products={products} onDelete={handleDelete} />
       )}
+
+      <div className="flex justify-center items-center gap-4 mt-6">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="text-sm">
+          Page {page} of {totalPages}
+        </span>
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="px-3 py-1 border rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
-

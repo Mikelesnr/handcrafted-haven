@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
 import Modal from "@/components/common/Modal";
+import Image from "next/image";
 
 type User = {
   id: string;
@@ -63,7 +64,7 @@ export default function AdminUserDetailPage() {
 
       <div className="bg-white shadow rounded-md p-4 flex gap-4 items-center">
         {user.Image?.url && (
-          <img
+          <Image
             src={user.Image.url}
             alt={user.name}
             className="w-16 h-16 rounded-full object-cover"
