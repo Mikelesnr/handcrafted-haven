@@ -6,7 +6,6 @@ import { useModalStore } from "@/context/ModalContext";
 import Modal from "@/components/common/Modal";
 import LoginForm from "@/components/auth/LoginForm";
 import RegisterForm from "@/components/auth/RegisterForm";
-import { useUser } from "@/lib/hooks/useUser";
 import { useAuth } from "@/context/AuthContext";
 import {
   LogIn,
@@ -21,8 +20,7 @@ import { useRouter } from "next/navigation";
 
 export default function TopNav() {
   const { activeModal, openModal, closeModal } = useModalStore();
-  const { user, loading } = useUser();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
@@ -39,9 +37,13 @@ export default function TopNav() {
         router.push("/admin/dashboard");
         break;
       default:
-        router.push("/shop");
+        router.push("/customer/dashboard");
         break;
     }
+  };
+
+  const handleLogout = async () => {
+    await logout();
   };
 
   const NavLinks = () => (
@@ -56,7 +58,7 @@ export default function TopNav() {
         Shop
       </Link>
 
-      {!loading && !user && (
+      {!user && (
         <>
           <button
             onClick={() => openModal("login")}
@@ -75,7 +77,7 @@ export default function TopNav() {
         </>
       )}
 
-      {!loading && user && (
+      {user && (
         <>
           <button
             onClick={handleDashboardRedirect}
@@ -89,7 +91,7 @@ export default function TopNav() {
             {user.name}
           </span>
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="flex items-center gap-1 text-sm text-foreground hover:text-secondary font-body"
           >
             <LogOut className="w-4 h-4" />

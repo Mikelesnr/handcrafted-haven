@@ -236,3 +236,39 @@ exports.logout = async (req, res) => {
     res.status(500).json({ error: "Logout failed", details: err });
   }
 };
+
+exports.getAuthenticatedUser = async (req, res) => {
+  const requester = req.user;
+
+  if (!requester) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: requester.id },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const profileImage = user.profileImage || null;
+
+    res.json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        emailVerified: user.isEmailVerified,
+        profileImage,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed to fetch user",
+      details: err.message || err,
+    });
+  }
+};

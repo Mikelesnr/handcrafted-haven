@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Merriweather } from "next/font/google";
 import "./globals.css";
 import TopNav from "@/components/common/TopNav";
 import Footer from "@/components/common/Footer";
 import { ModalProvider } from "@/context/ModalContext";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/context/AuthContext";
+import { CartProvider } from "@/components/order/CartProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const merriweather = Merriweather({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "700", "900"],
+  variable: "--font-merriweather",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -29,40 +27,40 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${merriweather.variable} antialiased`}>
         <AuthProvider>
-          <ModalProvider>
-            <TopNav />
-            <div className="min-h-screen bg-gradient-to-b from-red-500 to-white">
-              {children}
-            </div>
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                success: {
-                  style: {
-                    background: "#22c55e", // Tailwind green-500
-                    color: "white",
+          <CartProvider>
+            <ModalProvider>
+              <TopNav />
+              <div className="min-h-screen bg-gradient-to-b from-red-500 to-white">
+                {children}
+              </div>
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  success: {
+                    style: {
+                      background: "#22c55e",
+                      color: "white",
+                    },
                   },
-                },
-                error: {
-                  style: {
-                    background: "#ef4444", // Tailwind red-500
-                    color: "white",
+                  error: {
+                    style: {
+                      background: "#ef4444",
+                      color: "white",
+                    },
                   },
-                },
-                loading: {
-                  style: {
-                    background: "#f97316", // Tailwind orange-500 (for warning/processing)
-                    color: "white",
+                  loading: {
+                    style: {
+                      background: "#f97316",
+                      color: "white",
+                    },
                   },
-                },
-              }}
-            />
-            <Footer />
-          </ModalProvider>
+                }}
+              />
+              <Footer />
+            </ModalProvider>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>
