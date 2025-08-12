@@ -80,13 +80,51 @@ exports.updateUser = async (req, res) => {
 
 // Delete a user
 exports.deleteUser = async (req, res) => {
-  const { id } = req.params;
+  const userId = parseInt(req.params.id);
+
+  if (isNaN(userId)) {
+    return res.status(400).json({ error: "Invalid user ID" });
+  }
+
   try {
-    await prisma.user.delete({ where: { id: parseInt(id) } });
-    res.json({ message: "User deleted" });
-  } catch (err) {
-    console.error("Error deleting user:", err);
-    res.status(404).json({ error: "Deletion failed", details: err });
+    // Step 1: Check and delete reviews
+    const reviewCount = await prisma.review.count({ where: { userId } });
+    if (reviewCount > 0) {
+      await prisma.review.deleteMany({ where: { userId } });
+    }
+
+    // Step 2: Check and delete seller profile
+    const sellerCount = await prisma.seller.count({ where: { userId } });
+    if (sellerCount > 0) {
+      await prisma.seller.deleteMany({ where: { userId } });
+    }
+
+    // Step 3: Check and delete orders
+    const orderCount = await prisma.order.count({ where: { buyerId: userId } });
+    if (orderCount > 0) {
+      await prisma.order.deleteMany({ where: { buyerId: userId } });
+    }
+
+    // Step 4: Check and delete tokens
+    const tokenCount = await prisma.token.count({ where: { userId } });
+    if (tokenCount > 0) {
+      await prisma.token.deleteMany({ where: { userId } });
+    }
+
+    // Final Step: Delete the user
+    await prisma.user.delete({ where: { id: userId } });
+
+    return res
+      .status(200)
+      .json({ message: "User and related records deleted successfully" });
+  } catch (error) {
+    console.error("Deletion error:", error);
+
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(500).json({ error: "Deletion failed", details: error });
   }
 };
 

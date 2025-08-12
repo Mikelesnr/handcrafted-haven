@@ -16,13 +16,19 @@ export interface Review {
   createdAt: string;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
 export interface Product {
   id: number;
   title: string;
   description: string;
   price: number;
   imageUrl: string;
-  category: string;
+  category: Category;
   sellerId: number;
   createdAt: string;
   seller: Seller;

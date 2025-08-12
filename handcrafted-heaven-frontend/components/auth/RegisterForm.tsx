@@ -24,7 +24,18 @@ export default function RegisterForm({ onSuccess }: { onSuccess: () => void }) {
 
   const handleRegister = async () => {
     try {
-      await api.post("/auth/register", formData);
+      const res = await api.post("/auth/register", formData);
+      const { user } = res.data;
+
+      const filteredUser = {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        emailVerified: user.emailVerified,
+      };
+
+      localStorage.setItem("user", JSON.stringify(filteredUser));
+
       toast.success("✅ Account created! Check your email for verification.");
       onSuccess();
       router.push("/verify-email");

@@ -101,7 +101,7 @@ export default function SellerProductsPage() {
       title: product.title,
       description: product.description,
       price: product.price.toString(),
-      category: product.category,
+      category: product.category.name,
       imageUrl: product.imageUrl,
     });
     setShowAddForm(true);

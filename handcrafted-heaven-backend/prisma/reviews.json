@@ -276,14 +276,14 @@
   {
     "rating": 5,
     "comment": "Brilliant craftsmanship!",
-    "productId": 23,
+    "productId": 20,
     "userId": 22,
     "createdAt": "2025-07-30T03:30:00.000Z"
   },
   {
     "rating": 4,
     "comment": "Loved the natural tone.",
-    "productId": 23,
+    "productId": 20,
     "userId": 23,
     "createdAt": "2025-07-30T04:00:00.000Z"
   },
@@ -291,14 +291,14 @@
   {
     "rating": 3,
     "comment": "Minimal but effective design.",
-    "productId": 24,
+    "productId": 2,
     "userId": 24,
     "createdAt": "2025-07-30T04:30:00.000Z"
   },
   {
     "rating": 5,
     "comment": "Exceeded expectations!",
-    "productId": 24,
+    "productId": 2,
     "userId": 12,
     "createdAt": "2025-07-30T05:00:00.000Z"
   }

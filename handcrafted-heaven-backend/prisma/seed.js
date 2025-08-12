@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 
 const users = require("./users.json");
 const sellers = require("./sellers.json");
+const categories = require("./categories.json"); // ✅ NEW
 const products = require("./products.json");
 const reviews = require("./reviews.json");
 const orders = require("./orders.json");
@@ -13,31 +14,51 @@ const payments = require("./payments.json");
 async function main() {
   const hashedPassword = await bcrypt.hash("Test1234#", 10);
 
-  // 🧑‍💼 Seeding User Table
-  console.log("🌱 Seeding user table...");
-  for (const user of users) {
-    await prisma.user.create({
-      data: {
-        ...user,
-        password: hashedPassword,
-      },
-    });
-  }
-  console.log("✅ User table seeded.");
+  // // 🧑‍💼 Seeding User Table
+  // console.log("🌱 Seeding user table...");
+  // for (const user of users) {
+  //   await prisma.user.create({
+  //     data: {
+  //       ...user,
+  //       password: hashedPassword,
+  //     },
+  //   });
+  // }
+  // console.log("✅ User table seeded.");
 
-  // 🧑‍🎨 Seeding Seller Table
-  console.log("🌱 Seeding seller table...");
-  for (const seller of sellers) {
-    await prisma.seller.create({ data: seller });
-  }
-  console.log("✅ Seller table seeded.");
+  // // 🧑‍🎨 Seeding Seller Table
+  // console.log("🌱 Seeding seller table...");
+  // for (const seller of sellers) {
+  //   await prisma.seller.create({ data: seller });
+  // }
+  // console.log("✅ Seller table seeded.");
 
-  // 🛍️ Seeding Product Table
-  console.log("🌱 Seeding product table...");
-  for (const product of products) {
-    await prisma.product.create({ data: product });
-  }
-  console.log("✅ Product table seeded.");
+  // // 🗂️ Seeding Category Table
+  // console.log("🌱 Seeding category table...");
+  // for (const category of categories) {
+  //   await prisma.category.create({ data: category });
+  // }
+  // // console.log("✅ Category table seeded.");
+
+  // // 🛍️ Seeding Product Table
+  // console.log("🌱 Seeding product table...");
+  // for (const product of products) {
+  //   try {
+  //     await prisma.product.create({
+  //       data: {
+  //         title: product.title,
+  //         description: product.description,
+  //         price: product.price,
+  //         imageUrl: product.imageUrl,
+  //         categoryId: product.categoryId,
+  //         sellerId: product.sellerId,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.error(`❌ Error seeding product: ${product.title}`, err.message);
+  //   }
+  // }
+  // console.log("✅ Product table seeded.");
 
   // ⭐ Seeding Review Table
   console.log("🌱 Seeding review table...");
