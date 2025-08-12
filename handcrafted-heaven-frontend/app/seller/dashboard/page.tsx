@@ -98,7 +98,9 @@ export default function SellerDashboardPage() {
           {products.length > 0 ? (
             <div>
               <p className="font-medium">{products[0].title}</p>
-              <p className="text-sm text-gray-500">{products[0].category}</p>
+              <p className="text-sm text-gray-500">
+                {products[0].category.name}
+              </p>
             </div>
           ) : (
             <p className="text-gray-500">No products yet</p>

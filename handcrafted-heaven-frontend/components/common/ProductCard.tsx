@@ -4,6 +4,7 @@ import { useState } from "react";
 import ProductModal from "./ProductModal";
 import { Product } from "@/lib/types";
 import Image from "next/image";
+import { useCart } from "@/components/order/useCart"; // ✅ Added
 
 interface Props {
   product: Product;
@@ -11,13 +12,25 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   const [showModal, setShowModal] = useState(false);
-
+  const { dispatch } = useCart(); // ✅ Added
   const avgRating = product.reviews.length
     ? (
         product.reviews.reduce((acc, r) => acc + r.rating, 0) /
         product.reviews.length
       ).toFixed(1)
     : "No ratings";
+
+  const handleAddToCart = () => {
+    dispatch({
+      type: "ADD_ITEM",
+      payload: {
+        productId: product.id,
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+      },
+    });
+  };
 
   return (
     <>
@@ -66,6 +79,13 @@ export default function ProductCard({ product }: Props) {
             className="mt-4 w-full bg-secondary text-white text-center py-2 px-4 rounded hover:bg-secondary/90 text-sm"
           >
             View Product
+          </button>
+
+          <button
+            onClick={handleAddToCart}
+            className="mt-2 w-full bg-primary text-white text-center py-2 px-4 rounded hover:bg-primary/90 text-sm"
+          >
+            Add to Cart
           </button>
         </div>
       </div>

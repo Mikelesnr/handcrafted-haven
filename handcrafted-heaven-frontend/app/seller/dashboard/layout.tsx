@@ -1,7 +1,7 @@
 "use client";
 
-// import { useEffect } from "react";
-// import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Home, Package, User, Settings } from "lucide-react";
@@ -11,8 +11,8 @@ export default function SellerDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { loading } = useAuth();
-  // const _router = useRouter();
+  const { loading, user } = useAuth();
+  const router = useRouter();
 
   const sellerNavItems = [
     { label: "Dashboard", href: "/seller/dashboard", icon: <Home size={18} /> },
@@ -33,11 +33,11 @@ export default function SellerDashboardLayout({
     },
   ];
 
-  // useEffect(() => {
-  //   if (!loading && (!user || user.role !== "SELLER")) {
-  //     router.replace("/");
-  //   }
-  // }, [user, loading, router]);
+  useEffect(() => {
+    if (!loading && (!user || user.role !== "SELLER")) {
+      router.replace("/");
+    }
+  }, [user, loading, router]);
 
   if (loading) {
     return (
@@ -47,9 +47,9 @@ export default function SellerDashboardLayout({
     );
   }
 
-  // if (!user || user.role !== "SELLER") {
-  //   return null;
-  // }
+  if (!user || user.role !== "SELLER") {
+    return null;
+  }
 
   return (
     <DashboardLayout navItems={sellerNavItems}>{children}</DashboardLayout>

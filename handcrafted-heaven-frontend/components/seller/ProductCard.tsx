@@ -31,7 +31,7 @@ export default function ProductCard({ product, onEdit, onDelete }: Props) {
           {product.description}
         </p>
         <div className="text-xs text-gray-500 mb-4">
-          Category: {product.category}
+          Category: {product.category.name}
         </div>
         <div className="flex gap-2">
           <button

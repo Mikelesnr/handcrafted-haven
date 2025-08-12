@@ -3,6 +3,7 @@
 import { Product } from "@/lib/types";
 import { Dialog } from "@headlessui/react";
 import Image from "next/image";
+import { useCart } from "@/components/order/useCart"; // ✅ Added
 
 interface Props {
   product: Product;
@@ -11,7 +12,11 @@ interface Props {
 }
 
 export default function ProductModal({ isOpen, onClose, product }: Props) {
+  const { dispatch } = useCart(); // ✅ Added
+
   if (!product) return null;
+
+  console.log("ProductModal product:", product.category);
 
   const avgRating = product.reviews.length
     ? (
@@ -19,6 +24,19 @@ export default function ProductModal({ isOpen, onClose, product }: Props) {
         product.reviews.length
       ).toFixed(1)
     : "No ratings";
+
+  const handleAddToCart = () => {
+    dispatch({
+      type: "ADD_ITEM",
+      payload: {
+        productId: product.id,
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+      },
+    });
+    onClose(); // Optional: close modal after adding
+  };
 
   return (
     <Dialog
@@ -49,7 +67,7 @@ export default function ProductModal({ isOpen, onClose, product }: Props) {
             <span className="text-yellow-500">⭐ {avgRating}</span>
           </div>
           <p className="text-sm text-neutral-500 mt-1">
-            Category: {product.category}
+            Category: {product.category?.name ?? "Uncategorized"}
           </p>
         </div>
 
@@ -81,8 +99,15 @@ export default function ProductModal({ isOpen, onClose, product }: Props) {
         </div>
 
         <button
+          onClick={handleAddToCart}
+          className="mt-4 w-full bg-primary text-white py-2 rounded hover:bg-primary/90"
+        >
+          Add to Cart
+        </button>
+
+        <button
           onClick={onClose}
-          className="mt-6 w-full bg-secondary text-white py-2 rounded hover:bg-secondary/90"
+          className="mt-2 w-full bg-secondary text-white py-2 rounded hover:bg-secondary/90"
         >
           Close
         </button>
