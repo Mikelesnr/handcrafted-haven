@@ -20,11 +20,12 @@ const CartSidebar: React.FC = () => {
         </h2>
         <button
           onClick={() => dispatch({ type: "CLEAR_CART" })}
-          className="text-sm text-red-500 hover:text-red-700 transition"
+          className="text-sm text-red-500 hover:text-red-700 hover:font-semibold transition-all duration-300"
         >
           Clear
         </button>
       </div>
+
       {state.items.length === 0 ? (
         <p className="text-neutral-500 dark:text-neutral-400 italic flex-grow">
           No items in cart.
@@ -34,7 +35,7 @@ const CartSidebar: React.FC = () => {
           {state.items.map((item) => (
             <li
               key={item.productId}
-              className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-neutral-700 shadow-sm"
+              className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-neutral-700 shadow-sm hover:shadow-md transition-all duration-300"
             >
               <div className="flex flex-col flex-grow">
                 <strong className="text-neutral-900 dark:text-neutral-100">
@@ -51,7 +52,7 @@ const CartSidebar: React.FC = () => {
                         },
                       })
                     }
-                    className="text-gray-400 hover:text-red-500 transition disabled:text-gray-300"
+                    className="text-gray-400 hover:text-red-500 hover:scale-110 transition disabled:text-gray-300"
                     disabled={item.quantity <= 1}
                     aria-label="Decrease quantity"
                   >
@@ -70,7 +71,7 @@ const CartSidebar: React.FC = () => {
                         },
                       })
                     }
-                    className="text-gray-400 hover:text-green-500 transition"
+                    className="text-gray-400 hover:text-green-500 hover:scale-110 transition"
                     aria-label="Increase quantity"
                   >
                     <PlusCircle className="w-5 h-5" />
@@ -87,7 +88,7 @@ const CartSidebar: React.FC = () => {
                     payload: { productId: item.productId },
                   })
                 }
-                className="ml-4 text-red-500 hover:text-red-700 transition"
+                className="ml-4 text-red-500 hover:text-red-700 hover:scale-105 transition-all duration-300"
                 aria-label={`Remove ${item.title}`}
               >
                 <Trash2 className="h-5 w-5" />
@@ -96,13 +97,14 @@ const CartSidebar: React.FC = () => {
           ))}
         </ul>
       )}
+
       <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
         <p className="flex justify-between items-center text-xl font-bold text-neutral-900 dark:text-neutral-100">
           <span>Total:</span>
           <span>${totalAmount.toFixed(2)}</span>
         </p>
+
         {!orderId ? (
-          // Check if user exists and pass the converted ID to CheckoutForm
           user ? (
             <CheckoutForm
               buyerId={Number(user.id)}
@@ -114,7 +116,6 @@ const CartSidebar: React.FC = () => {
             </p>
           )
         ) : (
-          // Pass the missing totalAmount prop to PaymentSimulator
           <PaymentSimulator orderId={orderId} totalAmount={totalAmount} />
         )}
       </div>
