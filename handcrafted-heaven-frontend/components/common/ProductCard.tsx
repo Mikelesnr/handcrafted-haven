@@ -5,6 +5,7 @@ import ProductModal from "./ProductModal";
 import { useCart } from "@/components/order/useCart";
 import { Product } from "@/lib/types";
 import Image from "next/image";
+import { toast } from "react-hot-toast";
 
 interface Props {
   product: Product;
@@ -13,6 +14,7 @@ interface Props {
 const ProductCard: React.FC<Props> = ({ product }) => {
   const [showModal, setShowModal] = useState(false);
   const { dispatch } = useCart();
+
   const avgRating = product.reviews.length
     ? (
         product.reviews.reduce((acc, r) => acc + r.rating, 0) /
@@ -30,6 +32,8 @@ const ProductCard: React.FC<Props> = ({ product }) => {
         quantity: 1,
       },
     });
+
+    toast.success(`Added "${product.title}" to cart`);
   };
 
   return (
@@ -60,13 +64,15 @@ const ProductCard: React.FC<Props> = ({ product }) => {
             </div>
           </div>
           <div className="flex items-center gap-2 mt-2">
-            <Image
-              src={product.seller.imageUrl}
-              alt="Seller Avatar"
-              width={24}
-              height={24}
-              className="rounded-full"
-            />
+            <div className="w-6 h-6 rounded-full overflow-hidden relative">
+              <Image
+                src={product.seller.imageUrl}
+                alt="Seller Avatar"
+                fill
+                className="object-cover"
+                sizes="24px"
+              />
+            </div>
             <span className="text-neutral-500 dark:text-neutral-400 text-xs truncate">
               {product.seller.bio}
             </span>
@@ -74,13 +80,13 @@ const ProductCard: React.FC<Props> = ({ product }) => {
           <div className="mt-4 flex gap-2">
             <button
               onClick={() => setShowModal(true)}
-              className="w-full bg-secondary text-white text-center py-2 px-4 rounded-xl hover:bg-secondary/90 text-sm font-medium transition"
+              className="w-full bg-secondary text-white text-center py-2 px-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-secondary/90 hover:shadow-md hover:font-semibold"
             >
               View Product
             </button>
             <button
               onClick={handleAddToCart}
-              className="w-full bg-primary text-white text-center py-2 px-4 rounded-xl hover:bg-primary/90 text-sm font-medium transition"
+              className="w-full bg-primary text-white text-center py-2 px-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-md hover:font-semibold"
             >
               Add to Cart
             </button>

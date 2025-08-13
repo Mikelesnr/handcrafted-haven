@@ -4,12 +4,11 @@ import React, { useState } from "react";
 import api from "@/lib/api";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import { useCart } from "./useCart"; // Import the useCart hook
+import { useCart } from "./useCart";
 
 type PaymentMethod = "card" | "mobileMoney";
 type PaymentStatus = "IDLE" | "PROCESSING" | "SUCCESS";
 
-// Arrays of fake successful and unsuccessful payment details
 const successfulCards = ["1111222233334444", "4444333322221111"];
 const successfulMobileNumbers = ["+263771111111", "+263772222222"];
 
@@ -17,21 +16,18 @@ const PaymentSimulator: React.FC<{
   orderId: number;
   totalAmount: number;
 }> = ({ orderId }) => {
-  const { dispatch } = useCart(); // Get the dispatch function from the cart context
+  const { dispatch } = useCart();
   const [status, setStatus] = useState<PaymentStatus>("IDLE");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [paymentDetail, setPaymentDetail] = useState("");
 
   const handleSimulatePayment = async () => {
     setStatus("PROCESSING");
-
-    // Show a loading toast while processing
     const loadingToastId = toast.loading("Processing payment...");
 
     let isSuccess = false;
     let transactionId = "";
 
-    // Simulate a network delay for the payment processing
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     if (paymentMethod === "card") {
@@ -56,7 +52,6 @@ const PaymentSimulator: React.FC<{
 
     if (isSuccess) {
       try {
-        // Only if successful, submit the payment to the backend
         await api.post("/payments", {
           orderId,
           method: paymentMethod,
@@ -64,7 +59,6 @@ const PaymentSimulator: React.FC<{
           transactionId,
         });
 
-        // Now that the payment is successful, clear the cart.
         dispatch({ type: "CLEAR_CART" });
 
         toast.success(`🎉 Payment for order #${orderId} completed!`, {
@@ -76,14 +70,13 @@ const PaymentSimulator: React.FC<{
         toast.error("An error occurred. Please contact support.", {
           id: loadingToastId,
         });
-        setStatus("IDLE"); // Reset status to allow retries
+        setStatus("IDLE");
       }
     } else {
-      setStatus("IDLE"); // Reset status to allow retries
+      setStatus("IDLE");
     }
   };
 
-  // Render a thank you message on success
   if (status === "SUCCESS") {
     return (
       <div className="p-4 text-center bg-green-100 text-green-800 rounded-lg shadow-inner">
@@ -96,12 +89,12 @@ const PaymentSimulator: React.FC<{
     );
   }
 
-  // Render the payment form
   return (
     <div className="p-4 bg-neutral-100 rounded-lg shadow-inner text-neutral-900">
       <h3 className="text-lg font-semibold mb-2">Simulate Payment</h3>
+
       <div className="flex gap-4 mb-4">
-        <label className="flex items-center">
+        <label className="flex items-center cursor-pointer hover:font-semibold transition">
           <input
             type="radio"
             name="paymentMethod"
@@ -111,11 +104,11 @@ const PaymentSimulator: React.FC<{
               setPaymentMethod("card");
               setPaymentDetail("");
             }}
-            className="mr-2"
+            className="mr-2 accent-blue-500"
           />
           Card
         </label>
-        <label className="flex items-center">
+        <label className="flex items-center cursor-pointer hover:font-semibold transition">
           <input
             type="radio"
             name="paymentMethod"
@@ -125,7 +118,7 @@ const PaymentSimulator: React.FC<{
               setPaymentMethod("mobileMoney");
               setPaymentDetail("");
             }}
-            className="mr-2"
+            className="mr-2 accent-yellow-500"
           />
           Mobile Money
         </label>
@@ -144,7 +137,7 @@ const PaymentSimulator: React.FC<{
             id="cardNumber"
             value={paymentDetail}
             onChange={(e) => setPaymentDetail(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm px-3 py-2 text-neutral-900"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm px-3 py-2 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:shadow-md transition"
             placeholder="e.g., 1111222233334444"
           />
         </div>
@@ -163,7 +156,7 @@ const PaymentSimulator: React.FC<{
             id="phoneNumber"
             value={paymentDetail}
             onChange={(e) => setPaymentDetail(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm px-3 py-2 text-neutral-900"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm px-3 py-2 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 hover:shadow-md transition"
             placeholder="e.g., +263771111111"
           />
         </div>
@@ -172,7 +165,7 @@ const PaymentSimulator: React.FC<{
       <button
         onClick={handleSimulatePayment}
         disabled={status === "PROCESSING" || !paymentDetail}
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-blue-300 transition-colors flex items-center justify-center gap-2"
+        className="w-full bg-blue-500 text-white py-2 px-4 rounded text-sm font-medium transition-all duration-300 hover:bg-blue-600 hover:shadow-md hover:font-semibold disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {status === "PROCESSING" && (
           <Loader2 className="h-5 w-5 animate-spin" />

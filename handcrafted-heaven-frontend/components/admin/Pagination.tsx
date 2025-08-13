@@ -12,7 +12,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
       <button
         disabled={page === 1}
         onClick={() => onPageChange(page - 1)}
-        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50  hover:bg-gray-300"
       >
         Prev
       </button>
@@ -22,7 +22,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
       <button
         disabled={page === totalPages}
         onClick={() => onPageChange(page + 1)}
-        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+        className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300"
       >
         Next
       </button>

@@ -42,6 +42,8 @@ const ProductModal = ({ isOpen, onClose, product }: Props) => {
         quantity: 1,
       },
     });
+
+    toast.success(`Added "${product.title}" to cart`);
     onClose();
   };
 
@@ -80,7 +82,7 @@ const ProductModal = ({ isOpen, onClose, product }: Props) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +107,8 @@ const ProductModal = ({ isOpen, onClose, product }: Props) => {
               src={product.imageUrl}
               alt={product.title}
               fill
-              className="w-full h-full object-cover rounded-xl"
+              className="object-cover rounded-xl"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
           <div className="w-full md:w-1/2 flex flex-col justify-between">
@@ -123,13 +126,15 @@ const ProductModal = ({ isOpen, onClose, product }: Props) => {
                 <span className="text-yellow-500 text-lg">⭐ {avgRating}</span>
               </div>
               <div className="mt-4 flex items-center gap-2">
-                <Image
-                  src={product.seller.imageUrl}
-                  alt="Seller"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
+                <div className="w-8 h-8 rounded-full overflow-hidden relative">
+                  <Image
+                    src={product.seller.imageUrl}
+                    alt="Seller"
+                    fill
+                    className="object-cover"
+                    sizes="32px"
+                  />
+                </div>
                 <p className="text-sm text-neutral-700 dark:text-neutral-300">
                   {product.seller.bio}
                 </p>
@@ -153,7 +158,7 @@ const ProductModal = ({ isOpen, onClose, product }: Props) => {
             <div className="mt-6 flex gap-4">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-primary text-white py-3 rounded-xl hover:bg-primary/90 font-semibold"
+                className="w-full bg-primary text-white py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-md hover:font-semibold"
               >
                 Add to Cart
               </button>
@@ -161,7 +166,7 @@ const ProductModal = ({ isOpen, onClose, product }: Props) => {
               {user?.role === "CUSTOMER" && (
                 <button
                   onClick={() => setShowRatingModal(true)}
-                  className="w-full bg-yellow-100 text-yellow-800 py-3 rounded-xl hover:bg-yellow-200 font-semibold"
+                  className="w-full bg-yellow-100 text-yellow-800 py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-yellow-200 hover:shadow-md hover:font-semibold"
                 >
                   Rate Product
                 </button>
@@ -197,7 +202,7 @@ const ProductModal = ({ isOpen, onClose, product }: Props) => {
           />
           <button
             onClick={handleSubmitReview}
-            className="w-full bg-primary text-white py-2 rounded hover:bg-primary/90"
+            className="w-full bg-primary text-white py-2 rounded text-sm font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-md hover:font-semibold"
           >
             Submit Review
           </button>
