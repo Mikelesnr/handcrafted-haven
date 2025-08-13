@@ -1,6 +1,6 @@
 const prisma = require("../utilities/prismaClient");
 
-exports.createOrder = async (req, res) => {
+exports.createOrder = async (req, res, next) => {
   const { buyerId, items } = req.body;
 
   if (!buyerId || !Array.isArray(items) || items.length === 0) {
@@ -8,13 +8,19 @@ exports.createOrder = async (req, res) => {
       .status(400)
       .json({ error: "Missing buyer or valid order items" });
   }
-
   try {
     const totalAmount = items.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
-
+    console.log(
+      "Creating order for buyer:",
+      buyerId,
+      "with items:",
+      items,
+      "total amount:",
+      totalAmount
+    );
     const newOrder = await prisma.order.create({
       data: {
         buyerId,
@@ -34,9 +40,34 @@ exports.createOrder = async (req, res) => {
       },
     });
 
+    console.log("Order created successfully:", newOrder);
     res.status(201).json(newOrder);
   } catch (err) {
-    res.status(500).json({ error: "Order creation failed", details: err });
+    console.error("Prisma Order creation failed:", err);
+    next(err); // This will now work
+  }
+};
+
+exports.getMyOrders = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const orders = await prisma.order.findMany({
+      where: { buyerId: userId },
+      include: {
+        buyer: true,
+        items: { include: { product: true } },
+        payment: true,
+      },
+    });
+
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: "Error retrieving orders" });
   }
 };
 
@@ -51,6 +82,7 @@ exports.getAllOrders = async (req, res) => {
     });
     res.json(orders);
   } catch (err) {
+    console.error("Error fetching orders:", err);
     res.status(500).json({ error: "Error fetching orders" });
   }
 };

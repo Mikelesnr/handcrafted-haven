@@ -1,8 +1,9 @@
 const prisma = require("../utilities/prismaClient");
 
 exports.createReview = async (req, res) => {
-  const { rating, comment, productId, userId } = req.body;
+  const { rating, comment, productId } = req.body;
   try {
+    const userId = req.user?.id;
     const review = await prisma.review.create({
       data: { rating, comment, productId, userId },
     });

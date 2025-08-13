@@ -1,14 +1,16 @@
 "use client";
-// handcrafted-heaven-frontend/components/order/CartProvider.tsx
-import React, { createContext, useReducer, useMemo } from "react";
-import { CartItem, CartState, CartAction } from "@/components/order/cartTypes";
 
-const CartContext = createContext<{
+import React, { createContext, useReducer, useMemo } from "react";
+import { CartItem, CartState, CartAction } from "./cartTypes";
+
+// Create a context for the cart with a null default value.
+export const CartContext = createContext<{
   state: CartState;
   dispatch: React.Dispatch<CartAction>;
   totalAmount: number;
 } | null>(null);
 
+// The reducer function handles state changes based on dispatched actions.
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case "ADD_ITEM": {
@@ -53,11 +55,13 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   }
 };
 
+// The main provider component that wraps the application.
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
 
+  // Calculate the total amount with useMemo to optimize performance.
   const totalAmount = useMemo(() => {
     return state.items.reduce(
       (sum: number, item: CartItem) => sum + item.price * item.quantity,
@@ -71,5 +75,3 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     </CartContext.Provider>
   );
 };
-
-export default CartContext;

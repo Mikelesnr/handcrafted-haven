@@ -39,17 +39,32 @@ exports.getAllProducts = async (req, res) => {
   try {
     const { skip, limit, page } = paginate(req);
 
+    // 1. Get the categoryId from the query parameters
+    const { categoryId } = req.query;
+
+    // 2. Build a conditional 'where' clause for the Prisma query.
+    // Ensure the categoryId is a number if it exists.
+    const whereClause = categoryId
+      ? {
+          categoryId: parseInt(categoryId, 10),
+        }
+      : {};
+
+    // 3. Use Promise.all to fetch products and the total count efficiently
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         skip,
         take: limit,
+        where: whereClause, // 4. Apply the 'where' clause here
         include: {
           seller: true,
           reviews: true,
-          category: true, // ✅ Attach category info
+          category: true,
         },
       }),
-      prisma.product.count(),
+      prisma.product.count({
+        where: whereClause, // 5. Apply the 'where' clause to the count as well
+      }),
     ]);
 
     res.json({
@@ -94,6 +109,49 @@ exports.getFilteredProducts = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: "Error filtering products", details: err });
+  }
+};
+
+exports.getHomeProducts = async (req, res) => {
+  try {
+    // Get the total number of products in the database
+    const totalProducts = await prisma.product.count();
+
+    // If there are 9 or fewer products, return all of them
+    if (totalProducts <= 9) {
+      const allProducts = await prisma.product.findMany({
+        include: {
+          // Corrected from `images` to `Image`
+          Image: { select: { url: true } },
+          seller: { select: { bio: true, imageUrl: true } },
+          reviews: { select: { rating: true } },
+        },
+      });
+      return res.json(allProducts);
+    }
+
+    // Calculate a random offset to ensure we can get 9 products
+    const skip = Math.floor(Math.random() * (totalProducts - 9));
+
+    // Fetch 9 products using the random offset
+    const randomProducts = await prisma.product.findMany({
+      take: 9,
+      skip: skip,
+      include: {
+        // Corrected from `images` to `Image`
+        Image: { select: { url: true } },
+        seller: { select: { bio: true, imageUrl: true } },
+        reviews: { select: { rating: true } },
+      },
+    });
+
+    res.json(randomProducts);
+  } catch (error) {
+    console.error("Error fetching home products:", error);
+    res.status(500).json({ error: "Failed to fetch home products." });
+  } finally {
+    // Disconnect Prisma client to prevent connection pool exhaustion
+    await prisma.$disconnect();
   }
 };
 
