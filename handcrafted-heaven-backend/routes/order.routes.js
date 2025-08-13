@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const orderController = require("../controllers/orderController");
+const { protect, isCustomer } = require("../utilities/middleware");
 
 router.post(
   "/",
+  protect,
+  isCustomer,
   /* #swagger.tags = ['Orders']
      #swagger.summary = 'Create a new order'
      #swagger.parameters['body'] = {
@@ -52,7 +55,32 @@ router.get(
 );
 
 router.get(
+  "/me",
+  protect,
+  isCustomer,
+  /* #swagger.tags = ['Orders']
+     #swagger.summary = 'Get orders for authenticated customer'
+     #swagger.description = 'Retrieves all orders where the logged-in user is the buyer'
+     #swagger.security = [{
+       "bearerAuth": []
+     }]
+     #swagger.responses[200] = {
+         description: 'Successfully fetched customer orders',
+         schema: [{ $ref: '#/components/schemas/Order' }]
+     }
+     #swagger.responses[401] = {
+         description: 'Unauthorized – missing or invalid token'
+     }
+     #swagger.responses[500] = {
+         description: 'Internal server error'
+     }
+  */
+  orderController.getMyOrders
+);
+
+router.get(
   "/:id",
+  protect,
   /* #swagger.tags = ['Orders']
      #swagger.summary = 'Get single order'
      #swagger.description = 'Fetch one order by ID including related buyer, items, and payment'
@@ -78,6 +106,7 @@ router.get(
 
 router.put(
   "/:id/status",
+  protect,
   /* #swagger.tags = ['Orders']
      #swagger.summary = 'Update order status'
      #swagger.description = 'Updates only the status of an order by its ID. Accepts values like CONFIRMED, SHIPPED, DELIVERED.'
@@ -114,6 +143,7 @@ router.put(
 
 router.delete(
   "/:id",
+  protect,
   /* #swagger.tags = ['Orders']
      #swagger.summary = 'Delete order'
      #swagger.description = 'Deletes an order by its ID'

@@ -30,9 +30,6 @@ export default function ProductCard({ product, onEdit, onDelete }: Props) {
         <p className="text-sm text-gray-600 mb-2 line-clamp-2">
           {product.description}
         </p>
-        <div className="text-xs text-gray-500 mb-4">
-          Category: {product.category}
-        </div>
         <div className="flex gap-2">
           <button
             onClick={() => onEdit(product)}

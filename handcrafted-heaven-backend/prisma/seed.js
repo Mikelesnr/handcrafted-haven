@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 
 const users = require("./users.json");
 const sellers = require("./sellers.json");
+const categories = require("./categories.json"); // ✅ NEW
 const products = require("./products.json");
 const reviews = require("./reviews.json");
 const orders = require("./orders.json");
@@ -32,10 +33,30 @@ async function main() {
   }
   console.log("✅ Seller table seeded.");
 
+  // 🗂️ Seeding Category Table
+  console.log("🌱 Seeding category table...");
+  for (const category of categories) {
+    await prisma.category.create({ data: category });
+  }
+  // console.log("✅ Category table seeded.");
+
   // 🛍️ Seeding Product Table
   console.log("🌱 Seeding product table...");
   for (const product of products) {
-    await prisma.product.create({ data: product });
+    try {
+      await prisma.product.create({
+        data: {
+          title: product.title,
+          description: product.description,
+          price: product.price,
+          imageUrl: product.imageUrl,
+          categoryId: product.categoryId,
+          sellerId: product.sellerId,
+        },
+      });
+    } catch (err) {
+      console.error(`❌ Error seeding product: ${product.title}`, err.message);
+    }
   }
   console.log("✅ Product table seeded.");
 

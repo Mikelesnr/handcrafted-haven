@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import { Home, PackageSearch, Users, Settings } from "lucide-react";
 
@@ -8,6 +11,9 @@ export default function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { loading, user } = useAuth();
+  const router = useRouter();
+
   const adminNavItems = [
     {
       label: "Dashboard",
@@ -30,6 +36,24 @@ export default function AdminDashboardLayout({
       icon: <Settings size={18} />,
     },
   ];
+
+  useEffect(() => {
+    if (!loading && (!user || user.role !== "ADMIN")) {
+      router.replace("/");
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+
+  if (!user || user.role !== "ADMIN") {
+    return null;
+  }
 
   return <DashboardLayout navItems={adminNavItems}>{children}</DashboardLayout>;
 }

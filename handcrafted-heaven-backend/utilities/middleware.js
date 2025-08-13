@@ -8,7 +8,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
 // ✅ Authentication middleware
 const protect = async (req, res, next) => {
   const token = req.cookies?.token;
-  console.log("Token from cookies:", token); // Debugging line
 
   if (!token) return res.status(401).json({ error: "Not authenticated" });
 
