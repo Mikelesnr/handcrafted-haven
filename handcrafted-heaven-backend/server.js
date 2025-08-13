@@ -37,6 +37,18 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
+// Error handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  const status = err.status || 500;
+  const message = err.message || "Something went wrong!";
+  res.status(status).json({
+    error: {
+      message,
+    },
+  });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running at ${PUBLIC_URL}`);

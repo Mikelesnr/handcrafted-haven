@@ -41,6 +41,23 @@ router.get(
   productController.getCategories
 );
 
+//home products route
+router.get(
+  "/home",
+  /* #swagger.tags = ['Products']
+     #swagger.summary = 'Get products for the homepage'
+     #swagger.description = 'Returns a random selection of 9 products for the homepage.'
+     #swagger.responses[200] = {
+       description: 'Random products for the homepage retrieved successfully',
+       schema: [{ $ref: '#/components/schemas/Product' }]
+     }
+     #swagger.responses[500] = {
+       description: 'Internal server error'
+     }
+  */
+  productController.getHomeProducts
+);
+
 // routes/productRoutes.ts
 router.get(
   "/filter",

@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const reviewController = require("../controllers/reviewController");
+const { protect, isCustomer } = require("../utilities/middleware");
 
 router.post(
   "/",
+  protect,
+  isCustomer,
   /* #swagger.tags = ['Reviews']
      #swagger.summary = 'Create review'
      #swagger.description = 'Create a new review for a product by a user'

@@ -11,8 +11,18 @@ exports.getAllPayments = async (req, res) => {
   }
 };
 
-exports.createPayment = async (req, res) => {
+exports.createPayment = async (req, res, next) => {
   const { orderId, method, status, transactionId } = req.body;
+  console.log(
+    "Creating payment for order:",
+    orderId,
+    "with method:",
+    method,
+    "status:",
+    status,
+    "transactionId:",
+    transactionId
+  );
   try {
     const payment = await prisma.payment.create({
       data: {
@@ -25,7 +35,9 @@ exports.createPayment = async (req, res) => {
     });
     res.status(201).json(payment);
   } catch (err) {
+    console.error("Prisma Payment creation failed:", err);
     res.status(400).json({ error: "Payment failed", details: err });
+    next(err);
   }
 };
 

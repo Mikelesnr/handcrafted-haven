@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.7",
+    "ash-star-ratting": "^1.0.4",
     "axios": "^1.11.0",
     "cors": "^2.8.5",
     "js-cookie": "^3.0.5",
@@ -19,6 +20,7 @@
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.5.2",
     "swagger-autogen": "^2.23.7",
+    "zod": "^4.0.17",
     "zustand": "^5.0.7"
   },
   "devDependencies": {
