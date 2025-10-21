@@ -27,7 +27,7 @@ exports.register = async (req, res) => {
         email,
         password: hashedPassword,
         role,
-        isEmailVerified: false,
+        isEmailVerified: true,
         verificationToken,
       },
     });
@@ -67,7 +67,7 @@ exports.register = async (req, res) => {
 
     const profileImage = userWithImage.Image[0]?.url || null;
 
-    await sendVerificationEmail(user);
+    // await sendVerificationEmail(user);
 
     res.status(201).json({
       user: {

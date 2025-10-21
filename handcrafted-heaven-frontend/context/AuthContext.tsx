@@ -127,7 +127,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           break;
         case "BUYER":
         case "CUSTOMER":
-          router.push("/verify-email");
+          // router.push("/verify-email");
+          router.push("/customer/dashboard");
           break;
       }
     } catch (err) {
