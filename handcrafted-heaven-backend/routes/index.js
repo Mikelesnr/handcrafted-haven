@@ -18,6 +18,7 @@ const orderRoutes = require("./order.routes"); // #swagger.tags = ['Orders']
 const paymentRoutes = require("./payment.routes"); // #swagger.tags = ['Payments']
 const authRoutes = require("./auth.routes"); // #swagger.tags = ['Auth']
 const adminRoutes = require("./admin.routes"); // #swagger.tags = ['Admin']
+const chatRoutes = require("./chat.routes"); // #swagger.tags = ['Chatbot']
 const homeController = require("../controllers/homeController.js");
 
 router.get("/", homeController.getHome);
@@ -30,5 +31,6 @@ router.use("/api/orders", orderRoutes);
 router.use("/api/payments", paymentRoutes);
 router.use("/api/auth", authRoutes);
 router.use("/api/admin", adminRoutes);
+router.use("/api/chat", chatRoutes);
 
 module.exports = router;
