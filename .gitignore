@@ -10,3 +10,4 @@ handcrafted-heaven-backend/config/swagger-output.json
 
 # .env
 handcrafted-heaven-backend/.env
+hadcrafted-heaven-frontend/.env
