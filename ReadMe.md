@@ -1,5 +1,3 @@
----
-
 # 🛍️ Handcrafted Haven
 
 A full-stack web application designed to showcase and sell unique handcrafted items, connecting passionate artisans with mindful consumers.
