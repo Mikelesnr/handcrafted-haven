@@ -48,8 +48,12 @@ export default function Chatbot(): React.JSX.Element {
     setIsLoading(true);
 
     try {
+      // Dynamically fall back to local if the production env variable isn't injected yet
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api";
+
       // Connect to your local Express backend sub-route file path
-      const response = await fetch("http://localhost:5000/api/chat", {
+      const response = await fetch(`${apiBaseUrl}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
