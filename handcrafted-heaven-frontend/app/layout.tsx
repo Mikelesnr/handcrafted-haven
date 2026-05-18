@@ -7,6 +7,7 @@ import { ModalProvider } from "@/context/ModalContext";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/components/order/CartProvider";
+import Chatbot from "@/components/chat/Chatbot";
 
 const merriweather = Merriweather({
   subsets: ["latin"],
@@ -59,6 +60,9 @@ export default function RootLayout({
                 }}
               />
               <Footer />
+
+              {/* Rendered from its clean feature folder grouping */}
+              <Chatbot />
             </ModalProvider>
           </CartProvider>
         </AuthProvider>
