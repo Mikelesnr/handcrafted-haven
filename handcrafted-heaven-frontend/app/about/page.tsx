@@ -9,7 +9,7 @@ export default function AboutPage() {
       const handleClick = (e: Event) => {
         e.preventDefault();
         const href = (e.currentTarget as HTMLAnchorElement).getAttribute(
-          "href"
+          "href",
         );
         if (href) {
           document.querySelector(href)?.scrollIntoView({
@@ -164,7 +164,6 @@ export default function AboutPage() {
           <h3 className="text-3xl font-bold mb-8">Project Contributors</h3>
           <div className="flex flex-col md:flex-row justify-center items-center gap-8">
             <div className="font-semibold text-lg">Michael Mwanza</div>
-            <div className="font-semibold text-lg">Moshoeshoe Simon Mopeli</div>
             <div className="font-semibold text-lg">Tinny Mosimanyana</div>
           </div>
         </div>
